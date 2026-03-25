@@ -11,8 +11,11 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> User:
     try:
         payload = decode_token(token)
-        user_id: int = payload.get("sub")
-    except JWTError:
+        user_id = payload.get("sub")
+        if user_id is None:
+            raise JWTError("missing sub claim")
+        user_id = int(user_id)
+    except (JWTError, ValueError, TypeError):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
     user = db.get(User, user_id)
     if not user:

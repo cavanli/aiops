@@ -1,7 +1,7 @@
 # 部署资源申请系统 — 设计文档
 
 **日期**：2026-03-25
-**版本**：v1.0
+**版本**：v1.2
 **状态**：已确认
 
 ---
@@ -30,10 +30,10 @@
 技术支持 → [发起申请] → 状态: pending
     ↓
 项目经理 → [审批]
-    ├─ 通过 → 状态: approved → 通知测试人员
-    └─ 拒绝 → 状态: rejected → 通知技术支持
+    ├─ 通过 → 状态: approved → 广播通知所有测试人员
+    └─ 拒绝 → 状态: rejected → 通知申请人（流程终止，需重新提交）
     ↓（通过）
-测试人员 → [提供环境配置] → 状态: ready → 通知技术支持
+测试人员 → [提供环境配置] → 状态: ready → 通知申请人
     ↓
 技术支持 → [部署 + 填写反馈] → 状态: completed → 通知项目经理
 ```
@@ -47,6 +47,20 @@
 | `rejected` | 审批拒绝，流程终止 |
 | `ready` | 资源已就绪，等待技术支持部署 |
 | `completed` | 部署完成，流程结束 |
+| `cancelled` | 申请人主动取消，流程终止，记录保留 |
+
+### 状态转换规则（完整）
+
+| 当前状态 | 允许的转换 | 执行角色 | 备注 |
+|---|---|---|---|
+| `pending` | → `approved` | pm | |
+| `pending` | → `rejected` | pm | |
+| `pending` | → `cancelled` | tech_support | 仅申请人可取消，记录保留 |
+| `approved` | → `ready` | tester | |
+| `ready` | → `completed` | tech_support | 仅当状态为 `ready` 时可提交反馈 |
+| `rejected` | 无 | — | 流程终止，不可重新激活，需重新提交新申请 |
+| `cancelled` | 无 | — | 流程终止，记录保留用于审计 |
+| `completed` | 无 | — | 不可重新打开 |
 
 ---
 
@@ -54,11 +68,13 @@
 
 | 触发事件 | 通知对象 | 通知方式 |
 |---|---|---|
-| 申请提交 | 项目经理 | 企微/钉钉 Webhook |
-| 审批通过 | 测试人员 | 企微/钉钉 Webhook |
-| 审批拒绝 | 申请人（技术支持） | 企微/钉钉 Webhook |
-| 资源就绪 | 申请人（技术支持） | 企微/钉钉 Webhook |
-| 部署完成 | 项目经理 | 企微/钉钉 Webhook |
+| 申请提交 | 所有 `pm` 角色用户 | 企微/钉钉 Webhook 广播 |
+| 审批通过 | 所有 `tester` 角色用户 | 企微/钉钉 Webhook 广播 |
+| 审批拒绝 | 申请人（tech_support） | 企微/钉钉 Webhook |
+| 资源就绪 | 申请人（tech_support） | 企微/钉钉 Webhook |
+| 部署完成 | 所有 `pm` 角色用户 | 企微/钉钉 Webhook 广播 |
+
+**广播策略**：通知发给对应角色的所有用户（小团队，广播可接受）。通知服务查询 `users` 表按 `role` 过滤，依次调用各用户的 `notification_handle` 发送消息。
 
 ---
 
@@ -68,7 +84,7 @@
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
-| 申请编号 | 字符串 | 自动 | 格式：`REQ-YYYY-MMDD-NNN`，系统生成 |
+| 申请编号 | 字符串 | 自动 | 格式：`REQ-YYYY-MMDD-NNN`，NNN 为全局自增序号，不按日期重置 |
 | 项目名称 | 字符串 | 是 | |
 | 申请产品版本 | 字符串 | 是 | 如 `v2.3.1` |
 | 部署环境类型 | 枚举 | 是 | 开发/测试/预生产/生产 |
@@ -142,36 +158,51 @@ deploy-request-system/
 
 ### User
 ```
-id, username, password_hash, role (tech_support|pm|tester),
-name, wechat_id, created_at
+id, username, password_hash,
+role: tech_support | pm | tester,
+name,
+notification_platform: wechat | dingtalk,   # 通知平台选择
+notification_handle,                          # 对应平台的 webhook/userid
+created_at
 ```
 
 ### DeployRequest
 ```
-id, req_no, project_name, product_version,
-env_type, env_description, expected_date, remarks,
-status (pending|approved|rejected|ready|completed),
-applicant_id (FK→User), created_at, updated_at
+id, req_no (UNIQUE, 全局自增),
+project_name, product_version,
+env_type: dev | test | staging | prod,
+env_description, expected_date, remarks,
+status: pending | approved | rejected | ready | completed | cancelled,
+applicant_id (FK→User),
+created_at, updated_at
 ```
 
 ### Approval
 ```
-id, request_id (FK→DeployRequest), reviewer_id (FK→User),
-action (approved|rejected), comment, created_at
+id,
+request_id (FK→DeployRequest, UNIQUE),   # 每个申请只有一条审批记录
+reviewer_id (FK→User),
+action: approved | rejected,
+comment,
+created_at
 ```
 
 ### ResourceConfig
 ```
-id, request_id (FK→DeployRequest),
+id,
+request_id (FK→DeployRequest, UNIQUE),   # 每个申请只有一条资源配置
 db_config, middleware_versions, network_policy,
-provider_id (FK→User), created_at
+provider_id (FK→User),
+created_at, updated_at
 ```
 
 ### DeployFeedback
 ```
-id, request_id (FK→DeployRequest),
+id,
+request_id (FK→DeployRequest, UNIQUE),   # 每个申请只有一条反馈
 deploy_start, deploy_end, summary,
-submitter_id (FK→User), created_at
+submitter_id (FK→User),
+created_at
 ```
 
 ---
@@ -180,16 +211,15 @@ submitter_id (FK→User), created_at
 
 ### 技术支持工作台
 - 统计卡片：我的申请总数、待审批、待部署、已完成
-- 申请列表：可筛选状态，操作列显示当前可执行动作（新建/填写反馈/查看详情）
-- 新建申请入口
+- 申请列表：支持按 `status` 筛选，分页（page/limit），操作列显示当前可执行动作
+- 新建申请入口；`pending` 状态的申请可修改或取消
 
 ### 项目经理工作台
-- 待审批队列：显示所有 `pending` 状态申请
-- 全部申请历史：按状态筛选
+- 待审批队列：显示所有 `pending` 状态申请，支持按 `status` 筛选，分页
 - 审批操作：通过/拒绝 + 填写意见
 
 ### 测试人员工作台
-- 待提供资源列表：显示所有 `approved` 状态申请
+- 待提供资源列表：显示所有 `approved` 状态申请，支持按 `status` 筛选，分页
 - 资源配置填写入口
 - 历史记录
 
@@ -198,30 +228,38 @@ submitter_id (FK→User), created_at
 ## 9. API 设计（核心端点）
 
 ```
-POST   /api/auth/register          # 注册
-POST   /api/auth/login             # 登录（返回JWT）
+POST   /api/auth/register          # 注册（含 role 选择）
+POST   /api/auth/login             # 登录（返回 JWT）
 
-GET    /api/requests               # 申请列表（按角色过滤）
+# 申请单 CRUD
+GET    /api/requests               # 申请列表
+                                   # 查询参数：?status=&page=1&limit=20
+                                   # tech_support 只看自己的；pm/tester 看全部
 POST   /api/requests               # 创建申请（tech_support）
-GET    /api/requests/{id}          # 申请详情
+GET    /api/requests/{id}          # 申请详情（含关联的审批/资源/反馈）
+PUT    /api/requests/{id}          # 修改申请（tech_support，仅 status=pending）
+POST   /api/requests/{id}/cancel   # 取消申请（tech_support，仅 status=pending）
+                                   # 将 status 设为 cancelled，HTTP 200 返回更新后的申请
 
-POST   /api/requests/{id}/approve  # 审批（pm）
-POST   /api/requests/{id}/resource # 提交资源配置（tester）
-POST   /api/requests/{id}/feedback # 提交部署反馈（tech_support）
+# 流程操作
+POST   /api/requests/{id}/approve  # 审批（pm，仅 status=pending）
+POST   /api/requests/{id}/resource # 提交资源配置（tester，仅 status=approved）
+POST   /api/requests/{id}/feedback # 提交部署反馈（tech_support，仅 status=ready）
+                                   # status≠ready 时返回 422
 ```
 
 ---
 
 ## 10. 权限规则
 
-- `tech_support`：只能查看和操作自己的申请；可创建申请、提交反馈
-- `pm`：可查看所有申请；只能执行审批操作
-- `tester`：可查看已审批的申请；只能填写资源配置
-- 所有接口需要 JWT 鉴权，角色权限在后端强制校验
+- `tech_support`：只能查看自己的申请；可创建、修改（pending）、取消（pending）、提交反馈（ready）
+- `pm`：可查看所有申请；只能执行审批操作（pending）
+- `tester`：可查看所有 approved/ready/completed 申请；只能填写资源配置（approved）
+- 所有接口需要 JWT 鉴权，角色权限和状态前置条件在后端强制校验，不符合条件返回 `403` 或 `422`
 
 ---
 
 ## 11. 部署方式
 
 - Docker Compose 单机部署（backend + frontend + postgresql）
-- 企微/钉钉 Webhook URL 通过环境变量配置
+- 企微/钉钉 Webhook URL 及通知配置通过环境变量注入

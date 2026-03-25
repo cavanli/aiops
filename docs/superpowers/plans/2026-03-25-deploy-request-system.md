@@ -107,7 +107,6 @@ httpx==0.27.0
 python-multipart==0.0.9
 pytest==8.2.0
 pytest-asyncio==0.23.6
-httpx==0.27.0
 ```
 
 - [ ] **Step 2: Write backend Dockerfile**
@@ -823,6 +822,7 @@ class RequestListOut(BaseModel):
 from datetime import date
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
 from app.core.database import get_db
 from app.core.deps import get_current_user, require_role
 from app.models.models import DeployRequest, RequestStatus, User
@@ -830,7 +830,7 @@ from app.schemas.requests import (
     RequestCreate, RequestUpdate, RequestOut, RequestListOut,
     ApproveIn, ResourceIn, FeedbackIn
 )
-from app.services.workflow import WorkflowService
+from app.services import notification
 
 router = APIRouter()
 
@@ -840,8 +840,9 @@ def _generate_req_no(db: Session) -> str:
     return f"REQ-{today.year}-{today.strftime('%m%d')}-{count:03d}"
 
 @router.post("", response_model=RequestOut, status_code=201)
-def create_request(
+async def create_request(
     data: RequestCreate,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_role("tech_support")),
 ):
@@ -853,9 +854,7 @@ def create_request(
     db.add(req)
     db.commit()
     db.refresh(req)
-    from app.services.notification import notify_new_request
-    import asyncio
-    asyncio.create_task(notify_new_request(req, db))
+    background_tasks.add_task(notification.notify_new_request, req, db)
     return req
 
 @router.get("", response_model=RequestListOut)
@@ -1182,29 +1181,61 @@ async def notify_completed(req: DeployRequest, db: Session):
 
 - [ ] **Step 2: Wire notifications into api/requests.py**
 
-Add `import asyncio` and `from app.services import notification` at top of `requests.py`.
+`from app.services import notification` is already imported (added in Task 5).
+Add `background_tasks: BackgroundTasks` parameter to each of the three workflow endpoints and wire notifications using `background_tasks.add_task(...)` — this is FastAPI's built-in background task mechanism and works correctly in both sync and async route handlers.
 
-In `create_request`, after commit:
+Updated `approve_request`:
 ```python
-asyncio.create_task(notification.notify_new_request(req, db))
+@router.post("/{req_id}/approve", response_model=RequestOut)
+async def approve_request(
+    req_id: int, data: ApproveIn,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_role("pm")),
+):
+    req = db.get(DeployRequest, req_id)
+    if not req:
+        raise HTTPException(status_code=404)
+    updated = workflow.approve(req, data, current_user.id, db)
+    if data.action == "approved":
+        background_tasks.add_task(notification.notify_approved, updated, db)
+    else:
+        background_tasks.add_task(notification.notify_rejected, updated, db)
+    return updated
 ```
 
-In `approve_request`, after workflow call (add `db` param to notification calls):
+Updated `submit_resource`:
 ```python
-if data.action == "approved":
-    asyncio.create_task(notification.notify_approved(updated_req, db))
-else:
-    asyncio.create_task(notification.notify_rejected(updated_req, db))
+@router.post("/{req_id}/resource", response_model=RequestOut)
+async def submit_resource(
+    req_id: int, data: ResourceIn,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_role("tester")),
+):
+    req = db.get(DeployRequest, req_id)
+    if not req:
+        raise HTTPException(status_code=404)
+    updated = workflow.submit_resource(req, data, current_user.id, db)
+    background_tasks.add_task(notification.notify_resource_ready, updated, db)
+    return updated
 ```
 
-In `submit_resource`, after workflow call:
+Updated `submit_feedback`:
 ```python
-asyncio.create_task(notification.notify_resource_ready(updated_req, db))
-```
-
-In `submit_feedback`, after workflow call:
-```python
-asyncio.create_task(notification.notify_completed(updated_req, db))
+@router.post("/{req_id}/feedback", response_model=RequestOut)
+async def submit_feedback(
+    req_id: int, data: FeedbackIn,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_role("tech_support")),
+):
+    req = db.get(DeployRequest, req_id)
+    if not req or req.applicant_id != current_user.id:
+        raise HTTPException(status_code=404)
+    updated = workflow.submit_feedback(req, data, current_user.id, db)
+    background_tasks.add_task(notification.notify_completed, updated, db)
+    return updated
 ```
 
 - [ ] **Step 3: Run all tests to confirm nothing broke**
@@ -1557,6 +1588,7 @@ cd frontend && npm run dev
 ```
 Open http://localhost:5173/register — register one user of each role.
 Open http://localhost:5173/login — login, verify redirect to /dashboard.
+**Note:** `/dashboard` will show a blank page until `DashboardView.vue` is created in Task 10. That's expected — verify only that the redirect happens (URL changes to /dashboard) without a 404 crash.
 
 - [ ] **Step 6: Commit**
 

@@ -1,0 +1,9 @@
+{
+  "name": "opsgit-delivery",
+  "version": "1.0.0",
+  "description": "交付技术支持部门 AI 辅助工具集，包含私有化部署方案生成等技能",
+  "author": {
+    "name": "技术支持部门"
+  },
+  "keywords": ["deployment", "private-cloud", "delivery", "ops"]
+}

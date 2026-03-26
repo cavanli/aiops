@@ -1,0 +1,114 @@
+<h2>系统架构设计</h2>
+<p class="subtitle">FastAPI + Vue 3，分层清晰，易于维护</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:16px;">
+
+  <!-- 左：技术架构图 -->
+  <div>
+    <h3>🏗️ 技术栈分层</h3>
+    <div style="margin-top:10px;">
+
+      <!-- 前端层 -->
+      <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:14px;margin-bottom:10px;">
+        <div style="font-weight:700;color:#1d4ed8;margin-bottom:8px;">前端层（Vue 3）</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <span style="background:#dbeafe;color:#1e40af;border-radius:4px;padding:2px 8px;font-size:11px;">Vue 3 + Vite</span>
+          <span style="background:#dbeafe;color:#1e40af;border-radius:4px;padding:2px 8px;font-size:11px;">Element Plus</span>
+          <span style="background:#dbeafe;color:#1e40af;border-radius:4px;padding:2px 8px;font-size:11px;">Vue Router</span>
+          <span style="background:#dbeafe;color:#1e40af;border-radius:4px;padding:2px 8px;font-size:11px;">Pinia</span>
+          <span style="background:#dbeafe;color:#1e40af;border-radius:4px;padding:2px 8px;font-size:11px;">Axios</span>
+        </div>
+        <div style="font-size:11px;color:#3b82f6;margin-top:8px;">角色路由守卫 · 申请列表 · 各角色操作面板</div>
+      </div>
+
+      <!-- 箭头 -->
+      <div style="text-align:center;color:#94a3b8;font-size:18px;margin:2px 0;">↕ REST API (JSON)</div>
+
+      <!-- 后端层 -->
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:14px;margin-top:6px;margin-bottom:10px;">
+        <div style="font-weight:700;color:#15803d;margin-bottom:8px;">后端层（FastAPI）</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <span style="background:#dcfce7;color:#166534;border-radius:4px;padding:2px 8px;font-size:11px;">FastAPI</span>
+          <span style="background:#dcfce7;color:#166534;border-radius:4px;padding:2px 8px;font-size:11px;">SQLAlchemy</span>
+          <span style="background:#dcfce7;color:#166534;border-radius:4px;padding:2px 8px;font-size:11px;">Pydantic</span>
+          <span style="background:#dcfce7;color:#166534;border-radius:4px;padding:2px 8px;font-size:11px;">JWT Auth</span>
+          <span style="background:#dcfce7;color:#166534;border-radius:4px;padding:2px 8px;font-size:11px;">httpx</span>
+        </div>
+        <div style="font-size:11px;color:#22c55e;margin-top:8px;">业务逻辑 · 状态机 · 通知服务 · 权限校验</div>
+      </div>
+
+      <!-- 箭头 -->
+      <div style="text-align:center;color:#94a3b8;font-size:18px;margin:2px 0;">↕</div>
+
+      <!-- 数据层 -->
+      <div style="background:#fdf4ff;border:1px solid #e9d5ff;border-radius:8px;padding:14px;margin-top:6px;margin-bottom:10px;">
+        <div style="font-weight:700;color:#7e22ce;margin-bottom:8px;">数据层</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <span style="background:#f3e8ff;color:#6b21a8;border-radius:4px;padding:2px 8px;font-size:11px;">PostgreSQL（主库）</span>
+          <span style="background:#f3e8ff;color:#6b21a8;border-radius:4px;padding:2px 8px;font-size:11px;">Alembic（迁移）</span>
+        </div>
+      </div>
+
+      <!-- 通知层 -->
+      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:14px;margin-top:6px;">
+        <div style="font-weight:700;color:#92400e;margin-bottom:8px;">通知层</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <span style="background:#fef3c7;color:#78350f;border-radius:4px;padding:2px 8px;font-size:11px;">企微 Webhook</span>
+          <span style="background:#fef3c7;color:#78350f;border-radius:4px;padding:2px 8px;font-size:11px;">钉钉 Webhook</span>
+        </div>
+        <div style="font-size:11px;color:#d97706;margin-top:8px;">状态变更时异步推送消息</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 右：数据模型 -->
+  <div>
+    <h3>🗄️ 核心数据模型</h3>
+
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-top:10px;font-size:12px;font-family:monospace;">
+      <div style="font-weight:700;color:#1d4ed8;margin-bottom:6px;">User（用户）</div>
+      <div style="color:#64748b;">id · username · password_hash</div>
+      <div style="color:#64748b;">role: <span style="color:#7c3aed;">tech_support | pm | tester</span></div>
+      <div style="color:#64748b;">name · wechat_id · created_at</div>
+    </div>
+
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-top:8px;font-size:12px;font-family:monospace;">
+      <div style="font-weight:700;color:#1d4ed8;margin-bottom:6px;">DeployRequest（申请单）</div>
+      <div style="color:#64748b;">id · req_no（REQ-2026-0325-001）</div>
+      <div style="color:#64748b;">project_name · product_version</div>
+      <div style="color:#64748b;">env_type · env_description</div>
+      <div style="color:#64748b;">expected_date · remarks</div>
+      <div style="color:#64748b;">status: <span style="color:#7c3aed;">pending | approved | rejected | ready | completed</span></div>
+      <div style="color:#64748b;">applicant_id → User</div>
+      <div style="color:#64748b;">created_at · updated_at</div>
+    </div>
+
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-top:8px;font-size:12px;font-family:monospace;">
+      <div style="font-weight:700;color:#1d4ed8;margin-bottom:6px;">Approval（审批记录）</div>
+      <div style="color:#64748b;">id · request_id → DeployRequest</div>
+      <div style="color:#64748b;">reviewer_id → User</div>
+      <div style="color:#64748b;">action: approved | rejected</div>
+      <div style="color:#64748b;">comment · created_at</div>
+    </div>
+
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-top:8px;font-size:12px;font-family:monospace;">
+      <div style="font-weight:700;color:#1d4ed8;margin-bottom:6px;">ResourceConfig（资源配置）</div>
+      <div style="color:#64748b;">id · request_id → DeployRequest</div>
+      <div style="color:#64748b;">db_config · middleware_versions</div>
+      <div style="color:#64748b;">network_policy</div>
+      <div style="color:#64748b;">provider_id → User · created_at</div>
+    </div>
+
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-top:8px;font-size:12px;font-family:monospace;">
+      <div style="font-weight:700;color:#1d4ed8;margin-bottom:6px;">DeployFeedback（部署反馈）</div>
+      <div style="color:#64748b;">id · request_id → DeployRequest</div>
+      <div style="color:#64748b;">deploy_start · deploy_end</div>
+      <div style="color:#64748b;">summary</div>
+      <div style="color:#64748b;">submitter_id → User · created_at</div>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:20px;padding:14px;background:#fffbeb;border-radius:8px;border-left:4px solid #f59e0b;font-size:13px;">
+  <strong>架构和数据模型看起来合适吗？</strong> 有需要调整的地方吗？
+</div>

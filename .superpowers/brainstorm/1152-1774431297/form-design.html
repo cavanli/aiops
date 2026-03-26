@@ -1,0 +1,113 @@
+<h2>申请表单设计</h2>
+<p class="subtitle">技术支持填写 — 发起部署资源申请</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:16px;">
+
+  <!-- 左列：申请表单 -->
+  <div>
+    <h3>📋 申请单表单</h3>
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:20px;margin-top:10px;">
+
+      <div style="margin-bottom:14px;">
+        <div class="label">申请编号</div>
+        <input class="mock-input" value="REQ-2026-0325-001" disabled style="background:#f1f5f9;color:#64748b;">
+        <div style="font-size:11px;color:#94a3b8;margin-top:3px;">自动生成，格式：REQ-年份-月日-序号</div>
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <div class="label">项目名称 <span style="color:#ef4444">*</span></div>
+        <input class="mock-input" placeholder="请输入项目名称">
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <div class="label">申请产品版本 <span style="color:#ef4444">*</span></div>
+        <input class="mock-input" placeholder="如：v2.3.1">
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <div class="label">部署环境 <span style="color:#ef4444">*</span></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <div style="border:1px solid #3b82f6;background:#eff6ff;color:#1d4ed8;border-radius:20px;padding:4px 14px;font-size:12px;cursor:pointer;">开发环境</div>
+          <div style="border:1px solid #e2e8f0;border-radius:20px;padding:4px 14px;font-size:12px;cursor:pointer;color:#64748b;">测试环境</div>
+          <div style="border:1px solid #e2e8f0;border-radius:20px;padding:4px 14px;font-size:12px;cursor:pointer;color:#64748b;">预生产环境</div>
+          <div style="border:1px solid #e2e8f0;border-radius:20px;padding:4px 14px;font-size:12px;cursor:pointer;color:#64748b;">生产环境</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <div class="label">部署环境说明 <span style="color:#ef4444">*</span></div>
+        <textarea class="mock-input" rows="3" placeholder="描述当前环境现状、特殊约束条件等..." style="resize:vertical;"></textarea>
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <div class="label">期望部署时间</div>
+        <input class="mock-input" type="date" placeholder="选择期望完成部署的日期">
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <div class="label">备注</div>
+        <textarea class="mock-input" rows="2" placeholder="其他需要说明的信息..." style="resize:vertical;"></textarea>
+      </div>
+
+      <button class="mock-button" style="width:100%;background:#3b82f6;color:#fff;border:none;">提交申请</button>
+    </div>
+  </div>
+
+  <!-- 右列：后续步骤的表单 -->
+  <div>
+    <h3>✅ 审批表单（项目经理）</h3>
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:20px;margin-top:10px;">
+      <div style="margin-bottom:12px;font-size:12px;color:#64748b;background:#f1f5f9;border-radius:6px;padding:10px;">
+        <strong>申请信息摘要</strong><br>
+        项目：XXX系统升级 · v2.3.1 · 测试环境
+      </div>
+      <div style="margin-bottom:14px;">
+        <div class="label">审批意见</div>
+        <textarea class="mock-input" rows="2" placeholder="审批说明..." style="resize:vertical;"></textarea>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="mock-button" style="flex:1;background:#059669;color:#fff;border:none;">通过</button>
+        <button class="mock-button" style="flex:1;background:#ef4444;color:#fff;border:none;">拒绝</button>
+      </div>
+    </div>
+
+    <h3 style="margin-top:20px;">📦 资源配置表（测试人员）</h3>
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:20px;margin-top:10px;">
+      <div style="margin-bottom:12px;">
+        <div class="label">数据库配置</div>
+        <textarea class="mock-input" rows="2" placeholder="类型、版本、连接信息..." style="resize:vertical;"></textarea>
+      </div>
+      <div style="margin-bottom:12px;">
+        <div class="label">中间件版本</div>
+        <textarea class="mock-input" rows="2" placeholder="Redis、MQ、Nginx版本等..." style="resize:vertical;"></textarea>
+      </div>
+      <div style="margin-bottom:12px;">
+        <div class="label">网络策略</div>
+        <textarea class="mock-input" rows="2" placeholder="防火墙规则、端口开放情况..." style="resize:vertical;"></textarea>
+      </div>
+      <button class="mock-button" style="width:100%;background:#0891b2;color:#fff;border:none;">提交资源配置</button>
+    </div>
+
+    <h3 style="margin-top:20px;">🎯 部署反馈表（技术支持）</h3>
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:20px;margin-top:10px;">
+      <div style="margin-bottom:12px;">
+        <div class="label">部署周期</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input class="mock-input" type="date" style="flex:1;">
+          <span style="color:#94a3b8;font-size:12px;">至</span>
+          <input class="mock-input" type="date" style="flex:1;">
+        </div>
+      </div>
+      <div style="margin-bottom:12px;">
+        <div class="label">部署总结</div>
+        <textarea class="mock-input" rows="3" placeholder="部署过程描述、结果说明..." style="resize:vertical;"></textarea>
+      </div>
+      <button class="mock-button" style="width:100%;background:#059669;color:#fff;border:none;">提交部署反馈</button>
+    </div>
+  </div>
+
+</div>
+
+<div style="margin-top:20px;padding:14px;background:#fffbeb;border-radius:8px;border-left:4px solid #f59e0b;font-size:13px;">
+  <strong>表单字段是否合适？</strong> 有需要增删的字段吗？
+</div>

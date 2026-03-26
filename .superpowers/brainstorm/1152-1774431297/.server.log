@@ -1,0 +1,6 @@
+{"type":"server-started","port":54895,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:54895","screen_dir":"/mnt/e/Opsgit/.superpowers/brainstorm/1152-1774431297"}
+{"type":"screen-added","file":"/mnt/e/Opsgit/.superpowers/brainstorm/1152-1774431297/workflow.html"}
+{"type":"screen-added","file":"/mnt/e/Opsgit/.superpowers/brainstorm/1152-1774431297/form-design.html"}
+{"type":"screen-added","file":"/mnt/e/Opsgit/.superpowers/brainstorm/1152-1774431297/architecture.html"}
+{"type":"screen-added","file":"/mnt/e/Opsgit/.superpowers/brainstorm/1152-1774431297/dashboard.html"}
+{"type":"server-stopped","reason":"idle timeout"}

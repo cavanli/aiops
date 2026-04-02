@@ -33,7 +33,7 @@ func Success(c *gin.Context, data any) {
 }
 
 func Fail(c *gin.Context, httpStatus, code int, message string) {
-	c.JSON(httpStatus, Response{
+	c.AbortWithStatusJSON(httpStatus, Response{
 		Code:    code,
 		Message: message,
 	})
@@ -61,4 +61,12 @@ func InternalError(c *gin.Context) {
 
 func Conflict(c *gin.Context, message string) {
 	Fail(c, http.StatusConflict, ErrCodeConflict, message)
+}
+
+func DatabaseError(c *gin.Context) {
+	Fail(c, http.StatusInternalServerError, ErrCodeDatabaseError, "database error")
+}
+
+func ExternalServiceError(c *gin.Context, message string) {
+	Fail(c, http.StatusBadGateway, ErrCodeExternalService, message)
 }

@@ -1,4 +1,4 @@
-.PHONY: run build test lint migrate
+.PHONY: run build test lint tidy
 
 run:
 	go run ./cmd/api/...

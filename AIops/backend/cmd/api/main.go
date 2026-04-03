@@ -65,8 +65,8 @@ func main() {
 
 	// Host management
 	hostRepo := repository.NewHostRepo(db)
-	hostGroupRepo := repository.NewHostGroupRepo(db)
-	hostEnvVarRepo := repository.NewHostEnvVarRepo(db)
+	_ = repository.NewHostGroupRepo(db)
+	_ = repository.NewHostEnvVarRepo(db)
 	sshSvc := service.NewSSHService()
 	hostSvc := service.NewHostService(hostRepo, cryptoSvc, sshSvc)
 	hostHandler := handler.NewHostHandler(hostSvc)

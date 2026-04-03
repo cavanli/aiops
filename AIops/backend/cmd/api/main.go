@@ -61,6 +61,14 @@ func main() {
 	authHandler := handler.NewAuthHandler(authSvc)
 	userHandler := handler.NewUserHandler(userSvc, auditRepo)
 
+	// Host management
+	hostRepo := repository.NewHostRepo(db)
+	hostGroupRepo := repository.NewHostGroupRepo(db)
+	hostEnvVarRepo := repository.NewHostEnvVarRepo(db)
+	sshSvc := service.NewSSHService()
+	hostSvc := service.NewHostService(hostRepo, cryptoSvc, sshSvc)
+	hostHandler := handler.NewHostHandler(hostSvc)
+
 	// Router
 	if cfg.App.Env == "production" {
 		gin.SetMode(gin.ReleaseMode)
@@ -94,6 +102,16 @@ func main() {
 		users.DELETE("/:id", middleware.RequireRole("admin"), userHandler.Delete)
 
 		protected.GET("/audit-logs", middleware.RequireRole("admin"), userHandler.AuditLogs)
+
+		hosts := protected.Group("/hosts")
+		{
+			hosts.POST("", middleware.RequireRole("admin", "operator"), hostHandler.CreateHost)
+			hosts.GET("", hostHandler.ListHosts)
+			hosts.GET("/:id", hostHandler.GetHost)
+			hosts.PUT("/:id", middleware.RequireRole("admin", "operator"), hostHandler.UpdateHost)
+			hosts.DELETE("/:id", middleware.RequireRole("admin"), hostHandler.DeleteHost)
+			hosts.POST("/:id/test", middleware.RequireRole("admin", "operator"), hostHandler.TestConnection)
+		}
 	}
 
 	// Health check

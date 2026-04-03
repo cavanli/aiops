@@ -32,6 +32,9 @@ func main() {
 	database.AutoMigrate(db,
 		&model.User{},
 		&model.AuditLog{},
+		&model.Host{},
+		&model.HostGroup{},
+		&model.HostEnvVar{},
 	)
 
 	// Crypto

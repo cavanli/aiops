@@ -35,6 +35,8 @@ func main() {
 		&model.Host{},
 		&model.HostGroup{},
 		&model.HostEnvVar{},
+		&model.AIModel{},
+		&model.APIKey{},
 	)
 
 	// Crypto

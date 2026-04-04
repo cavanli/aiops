@@ -1,0 +1,16 @@
+bin/
+*.exe
+*.test
+*.out
+*.md
+.git/
+.gitignore
+.env
+.env.*
+docs/
+tmp/
+**/*_test.go
+coverage.out
+*.prof
+.vscode/
+.idea/

@@ -48,7 +48,6 @@ func main() {
 	if err != nil {
 		logger.Fatal("failed to init crypto", zap.Error(err))
 	}
-	_ = cryptoSvc // used by future modules
 
 	// JWT
 	accessTTL, _ := time.ParseDuration(cfg.JWT.AccessTTL)
@@ -86,6 +85,12 @@ func main() {
 	executionRepo := repository.NewExecutionRepo(db)
 	workflowSvc := service.NewWorkflowService(workflowRepo, executionRepo)
 	workflowHandler := handler.NewWorkflowHandler(workflowSvc)
+
+	// Deployment engine
+	templateRepo := repository.NewTemplateRepo(db)
+	taskRepo := repository.NewTaskRepo(db)
+	deploymentSvc := service.NewDeploymentService(templateRepo, taskRepo, hostRepo, cryptoSvc)
+	deploymentHandler := handler.NewDeploymentHandler(deploymentSvc)
 
 	// Router
 	if cfg.App.Env == "production" {
@@ -166,6 +171,25 @@ func main() {
 		{
 			executions.GET("", workflowHandler.ListExecutions)
 			executions.GET("/:id", workflowHandler.GetExecution)
+		}
+
+		// Deployment template routes
+		templates := protected.Group("/deployment-templates")
+		{
+			templates.GET("", deploymentHandler.ListTemplates)
+			templates.POST("", middleware.RequireRole("admin", "operator"), deploymentHandler.CreateTemplate)
+			templates.GET("/:id", deploymentHandler.GetTemplate)
+			templates.PUT("/:id", middleware.RequireRole("admin", "operator"), deploymentHandler.UpdateTemplate)
+			templates.DELETE("/:id", middleware.RequireRole("admin"), deploymentHandler.DeleteTemplate)
+		}
+
+		// Deployment task routes
+		deployments := protected.Group("/deployments")
+		{
+			deployments.GET("", deploymentHandler.ListTasks)
+			deployments.POST("", middleware.RequireRole("admin", "operator"), deploymentHandler.CreateTask)
+			deployments.GET("/:id", deploymentHandler.GetTask)
+			deployments.POST("/:id/cancel", middleware.RequireRole("admin", "operator"), deploymentHandler.CancelTask)
 		}
 	}
 

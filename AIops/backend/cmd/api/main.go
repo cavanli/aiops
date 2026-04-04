@@ -68,11 +68,15 @@ func main() {
 
 	// Host management
 	hostRepo := repository.NewHostRepo(db)
-	_ = repository.NewHostGroupRepo(db)
-	_ = repository.NewHostEnvVarRepo(db)
+	hostGroupRepo := repository.NewHostGroupRepo(db)
+	hostEnvVarRepo := repository.NewHostEnvVarRepo(db)
 	sshSvc := service.NewSSHService()
 	hostSvc := service.NewHostService(hostRepo, cryptoSvc, sshSvc)
 	hostHandler := handler.NewHostHandler(hostSvc)
+	hostGroupSvc := service.NewHostGroupService(hostGroupRepo)
+	hostGroupHandler := handler.NewHostGroupHandler(hostGroupSvc)
+	hostEnvVarSvc := service.NewHostEnvVarService(hostEnvVarRepo, cryptoSvc)
+	hostEnvVarHandler := handler.NewHostEnvVarHandler(hostEnvVarSvc)
 
 	// Model marketplace
 	modelRepo := repository.NewModelRepo(db)
@@ -134,6 +138,18 @@ func main() {
 			hosts.PUT("/:id", middleware.RequireRole("admin", "operator"), hostHandler.UpdateHost)
 			hosts.DELETE("/:id", middleware.RequireRole("admin"), hostHandler.DeleteHost)
 			hosts.POST("/:id/test", middleware.RequireRole("admin", "operator"), hostHandler.TestConnection)
+			hosts.GET("/:id/env-vars", hostEnvVarHandler.List)
+			hosts.POST("/:id/env-vars", middleware.RequireRole("admin", "operator"), hostEnvVarHandler.Create)
+			hosts.DELETE("/:id/env-vars/:var_id", middleware.RequireRole("admin", "operator"), hostEnvVarHandler.Delete)
+		}
+
+		hostGroups := protected.Group("/host-groups")
+		{
+			hostGroups.GET("", hostGroupHandler.List)
+			hostGroups.POST("", middleware.RequireRole("admin", "operator"), hostGroupHandler.Create)
+			hostGroups.GET("/:id", hostGroupHandler.Get)
+			hostGroups.PUT("/:id", middleware.RequireRole("admin", "operator"), hostGroupHandler.Update)
+			hostGroups.DELETE("/:id", middleware.RequireRole("admin"), hostGroupHandler.Delete)
 		}
 
 		// Model marketplace routes

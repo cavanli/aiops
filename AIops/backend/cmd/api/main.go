@@ -79,6 +79,12 @@ func main() {
 	modelSvc := service.NewModelService(modelRepo, apiKeyRepo, cryptoSvc)
 	modelHandler := handler.NewModelHandler(modelSvc)
 
+	// Workflow engine
+	workflowRepo := repository.NewWorkflowRepo(db)
+	executionRepo := repository.NewExecutionRepo(db)
+	workflowSvc := service.NewWorkflowService(workflowRepo, executionRepo)
+	workflowHandler := handler.NewWorkflowHandler(workflowSvc)
+
 	// Router
 	if cfg.App.Env == "production" {
 		gin.SetMode(gin.ReleaseMode)
@@ -140,6 +146,24 @@ func main() {
 			apiKeys.GET("", modelHandler.ListAPIKeys)
 			apiKeys.POST("", middleware.RequireRole("admin"), modelHandler.CreateAPIKey)
 			apiKeys.DELETE("/:id", middleware.RequireRole("admin"), modelHandler.DeleteAPIKey)
+		}
+
+		// Workflow routes
+		workflows := protected.Group("/workflows")
+		{
+			workflows.GET("", workflowHandler.ListWorkflows)
+			workflows.POST("", middleware.RequireRole("admin", "operator"), workflowHandler.CreateWorkflow)
+			workflows.GET("/:id", workflowHandler.GetWorkflow)
+			workflows.PUT("/:id", middleware.RequireRole("admin", "operator"), workflowHandler.UpdateWorkflow)
+			workflows.DELETE("/:id", middleware.RequireRole("admin"), workflowHandler.DeleteWorkflow)
+			workflows.POST("/:id/execute", middleware.RequireRole("admin", "operator"), workflowHandler.ExecuteWorkflow)
+		}
+
+		// Workflow execution routes
+		executions := protected.Group("/workflow-executions")
+		{
+			executions.GET("", workflowHandler.ListExecutions)
+			executions.GET("/:id", workflowHandler.GetExecution)
 		}
 	}
 

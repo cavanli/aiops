@@ -32,7 +32,7 @@ function processQueue(error: unknown, token: string | null) {
     if (error) {
       p.reject(error);
     } else {
-      p.resolve(token);
+      p.resolve(token as string);
     }
   });
   failedQueue = [];

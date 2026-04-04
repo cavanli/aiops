@@ -22,13 +22,17 @@ func (m *MockSSHService) TestConnection(host string, port int, user, key string)
 	return args.Error(0)
 }
 
+type SSHServiceInterface interface {
+	TestConnection(host string, port int, user, key string) error
+}
+
 func TestHostService_CreateHost(t *testing.T) {
 	db, _ := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
 	db.AutoMigrate(&model.Host{})
 
 	cryptoSvc, _ := crypto.New("12345678901234567890123456789012")
 	hostRepo := repository.NewHostRepo(db)
-	sshSvc := new(MockSSHService)
+	sshSvc := NewSSHService()
 	svc := NewHostService(hostRepo, cryptoSvc, sshSvc)
 
 	host := &model.Host{

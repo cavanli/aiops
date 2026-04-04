@@ -1,6 +1,12 @@
 import axios from 'axios';
 import { useAuthStore } from '@/store/authStore';
 
+declare module 'axios' {
+  interface InternalAxiosRequestConfig {
+    _retry?: boolean;
+  }
+}
+
 const client = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 30000,
@@ -17,7 +23,7 @@ client.interceptors.request.use((config) => {
 
 let isRefreshing = false;
 let failedQueue: Array<{
-  resolve: (value: unknown) => void;
+  resolve: (value: string) => void;
   reject: (reason?: unknown) => void;
 }> = [];
 
@@ -43,7 +49,7 @@ client.interceptors.response.use(
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         }).then((token) => {
-          originalRequest.headers.Authorization = `Bearer ${token}`;
+          originalRequest.headers.Authorization = `Bearer ${token as string}`;
           return client(originalRequest);
         });
       }
@@ -66,7 +72,12 @@ client.interceptors.response.use(
           { refresh_token: refreshToken }
         );
         const { token: newToken, refresh_token: newRefresh } = res.data.data;
-        setAuth(newToken, newRefresh, user!);
+        if (!user) {
+          clearAuth();
+          window.location.href = '/login';
+          return Promise.reject(error);
+        }
+        setAuth(newToken, newRefresh, user);
         processQueue(null, newToken);
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return client(originalRequest);

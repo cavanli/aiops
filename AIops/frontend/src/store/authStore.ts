@@ -12,6 +12,8 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>()(
+  // Tokens are intentionally persisted to localStorage for session recovery.
+  // This is a deliberate design choice documented in Plan F1.
   persist(
     (set, get) => ({
       token: null,

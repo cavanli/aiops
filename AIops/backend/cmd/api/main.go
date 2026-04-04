@@ -39,6 +39,8 @@ func main() {
 		&model.APIKey{},
 		&model.Workflow{},
 		&model.WorkflowExecution{},
+		&model.DeploymentTemplate{}, // Add
+		&model.DeploymentTask{},     // Add
 	)
 
 	// Crypto

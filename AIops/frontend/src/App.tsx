@@ -5,6 +5,7 @@ import { useAuthStore } from './store/authStore';
 import AppLayout from './layouts/AppLayout';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import Hosts from './pages/Hosts';
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
@@ -38,7 +39,7 @@ export default function App() {
             }
           >
             <Route index element={<Dashboard />} />
-            <Route path="hosts" element={<Dashboard />} />
+            <Route path="hosts" element={<Hosts />} />
             <Route path="models" element={<Dashboard />} />
             <Route path="workflows" element={<Dashboard />} />
             <Route path="deployments" element={<Dashboard />} />

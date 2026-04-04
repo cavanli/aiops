@@ -71,6 +71,12 @@ func main() {
 	hostSvc := service.NewHostService(hostRepo, cryptoSvc, sshSvc)
 	hostHandler := handler.NewHostHandler(hostSvc)
 
+	// Model marketplace
+	modelRepo := repository.NewModelRepo(db)
+	apiKeyRepo := repository.NewAPIKeyRepo(db)
+	modelSvc := service.NewModelService(modelRepo, apiKeyRepo, cryptoSvc)
+	modelHandler := handler.NewModelHandler(modelSvc)
+
 	// Router
 	if cfg.App.Env == "production" {
 		gin.SetMode(gin.ReleaseMode)
@@ -113,6 +119,25 @@ func main() {
 			hosts.PUT("/:id", middleware.RequireRole("admin", "operator"), hostHandler.UpdateHost)
 			hosts.DELETE("/:id", middleware.RequireRole("admin"), hostHandler.DeleteHost)
 			hosts.POST("/:id/test", middleware.RequireRole("admin", "operator"), hostHandler.TestConnection)
+		}
+
+		// Model marketplace routes
+		models := protected.Group("/models")
+		{
+			models.GET("", modelHandler.ListModels)
+			models.POST("", middleware.RequireRole("admin"), modelHandler.CreateModel)
+			models.GET("/:id", modelHandler.GetModel)
+			models.PUT("/:id", middleware.RequireRole("admin"), modelHandler.UpdateModel)
+			models.DELETE("/:id", middleware.RequireRole("admin"), modelHandler.DeleteModel)
+			models.POST("/:id/test", middleware.RequireRole("admin", "operator"), modelHandler.TestModel)
+		}
+
+		// API keys routes
+		apiKeys := protected.Group("/api-keys")
+		{
+			apiKeys.GET("", modelHandler.ListAPIKeys)
+			apiKeys.POST("", middleware.RequireRole("admin"), modelHandler.CreateAPIKey)
+			apiKeys.DELETE("/:id", middleware.RequireRole("admin"), modelHandler.DeleteAPIKey)
 		}
 	}
 

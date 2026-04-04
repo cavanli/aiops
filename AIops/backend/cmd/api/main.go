@@ -37,6 +37,8 @@ func main() {
 		&model.HostEnvVar{},
 		&model.AIModel{},
 		&model.APIKey{},
+		&model.Workflow{},
+		&model.WorkflowExecution{},
 	)
 
 	// Crypto

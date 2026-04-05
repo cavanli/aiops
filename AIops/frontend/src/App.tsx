@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard'
 import Hosts from './pages/Hosts'
 import Models from './pages/Models'
 import Workflows from './pages/Workflows'
+import Deployments from './pages/Deployments'
 
 const WorkflowEditor = React.lazy(() => import('./pages/WorkflowEditor'))
 
@@ -60,7 +61,7 @@ export default function App() {
             <Route path="hosts" element={<Hosts />} />
             <Route path="models" element={<Models />} />
             <Route path="workflows" element={<Workflows />} />
-            <Route path="deployments" element={<Dashboard />} />
+            <Route path="deployments" element={<Deployments />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />

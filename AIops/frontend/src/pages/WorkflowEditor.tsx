@@ -23,10 +23,20 @@ export default function WorkflowEditor() {
   const getFlowDataRef = useRef<() => { nodes: WorkflowNode[]; edges: WorkflowEdge[] }>(
     () => ({ nodes: [], edges: [] })
   )
+  const nodeDataChangeRef = useRef<(nodeId: string, data: Record<string, unknown>) => void>(
+    () => {}
+  )
 
   const registerGetFlowData = useCallback(
     (fn: () => { nodes: WorkflowNode[]; edges: WorkflowEdge[] }) => {
       getFlowDataRef.current = fn
+    },
+    []
+  )
+
+  const registerNodeDataChange = useCallback(
+    (fn: (nodeId: string, data: Record<string, unknown>) => void) => {
+      nodeDataChangeRef.current = fn
     },
     []
   )
@@ -118,16 +128,13 @@ export default function WorkflowEditor() {
           initialNodes={workflow.nodes ?? []}
           initialEdges={workflow.edges ?? []}
           onSelectionChange={setSelectedNode}
-          onNodeDataChange={() => {}}
           getFlowData={() => ({ nodes: [], edges: [] })}
           registerGetFlowData={registerGetFlowData}
+          registerNodeDataChange={registerNodeDataChange}
         />
         <NodeProperties
           selectedNode={selectedNode}
-          onChange={(_nodeId, _data) => {
-            // NodeProperties calls this when user edits fields
-            // Canvas handles its own state internally
-          }}
+          onChange={(nodeId, data) => nodeDataChangeRef.current(nodeId, data)}
         />
       </div>
     </div>

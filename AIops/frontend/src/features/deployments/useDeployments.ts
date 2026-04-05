@@ -8,7 +8,7 @@ import type { UpdateTemplateRequest } from '@/types/deployment'
 export function useTemplates() {
   return useQuery({
     queryKey: ['deployment-templates'],
-    queryFn: () => deploymentsApi.listTemplates().then((r) => r.data.data),
+    queryFn: () => deploymentsApi.listTemplates().then((r) => r.data.data.items),
   })
 }
 
@@ -54,7 +54,7 @@ export function useDeleteTemplate() {
 export function useTasks() {
   return useQuery({
     queryKey: ['deployment-tasks'],
-    queryFn: () => deploymentsApi.listTasks().then((r) => r.data.data),
+    queryFn: () => deploymentsApi.listTasks().then((r) => r.data.data.items),
   })
 }
 

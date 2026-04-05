@@ -75,7 +75,7 @@ export default function Dashboard() {
 
   const { data: recentTasks } = useQuery({
     queryKey: ['deployments', 'tasks', 'recent'],
-    queryFn: () => deploymentsApi.listTasks().then((r) => r.data.data.slice(0, 10)),
+    queryFn: () => deploymentsApi.listTasks().then((r) => r.data.data.items.slice(0, 10)),
   })
 
   const runningCount =

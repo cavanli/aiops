@@ -45,7 +45,7 @@ function makeWrapper() {
 describe('useTemplates', () => {
   beforeEach(() => {
     vi.mocked(deploymentsApi.listTemplates).mockResolvedValue({
-      data: { data: [mockTemplate], code: 0, message: 'ok' },
+      data: { data: { items: [mockTemplate], total: 1, page: 1, page_size: 10 }, code: 0, message: 'ok' },
     } as any)
   })
 
@@ -60,7 +60,7 @@ describe('useTemplates', () => {
 describe('useTasks', () => {
   beforeEach(() => {
     vi.mocked(deploymentsApi.listTasks).mockResolvedValue({
-      data: { data: [mockTask], code: 0, message: 'ok' },
+      data: { data: { items: [mockTask], total: 1, page: 1, page_size: 10 }, code: 0, message: 'ok' },
     } as any)
   })
 

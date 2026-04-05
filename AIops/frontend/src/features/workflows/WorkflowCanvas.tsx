@@ -20,9 +20,9 @@ interface Props {
   initialNodes: WorkflowNode[]
   initialEdges: WorkflowEdge[]
   onSelectionChange: (node: Node | null) => void
-  onNodeDataChange: (nodeId: string, data: Record<string, unknown>) => void
   getFlowData: () => { nodes: WorkflowNode[]; edges: WorkflowEdge[] }
   registerGetFlowData: (fn: () => { nodes: WorkflowNode[]; edges: WorkflowEdge[] }) => void
+  registerNodeDataChange: (fn: (nodeId: string, data: Record<string, unknown>) => void) => void
 }
 
 function toRFNode(wn: WorkflowNode): Node {
@@ -65,8 +65,8 @@ export default function WorkflowCanvas({
   initialNodes,
   initialEdges,
   onSelectionChange,
-  onNodeDataChange,
   registerGetFlowData,
+  registerNodeDataChange,
 }: Props) {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes.map(toRFNode))
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges.map(toRFEdge))
@@ -126,14 +126,12 @@ export default function WorkflowCanvas({
       setNodes((nds) =>
         nds.map((n) => (n.id === nodeId ? { ...n, data } : n))
       )
-      onNodeDataChange(nodeId, data)
     },
-    [setNodes, onNodeDataChange]
+    [setNodes]
   )
 
-  // Expose handleNodeDataChange via ref trick — parent calls this via prop
-  // (parent passes onNodeDataChange which we forward in WorkflowEditor)
-  void handleNodeDataChange
+  // Register handler so parent can wire NodeProperties.onChange → canvas
+  registerNodeDataChange(handleNodeDataChange)
 
   return (
     <div style={{ flex: 1, height: '100%' }}>

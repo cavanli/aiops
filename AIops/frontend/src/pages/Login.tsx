@@ -25,7 +25,7 @@ export default function Login() {
       message.success('登录成功');
       navigate('/');
     } catch {
-      message.error('用户名或密码错误');
+      message.error('邮箱或密码错误');
     } finally {
       setLoading(false);
     }
@@ -49,10 +49,10 @@ export default function Login() {
         </div>
         <Form name="login" onFinish={onFinish} size="large">
           <Form.Item
-            name="username"
-            rules={[{ required: true, message: '请输入用户名' }]}
+            name="email"
+            rules={[{ required: true, message: '请输入邮箱' }]}
           >
-            <Input prefix={<UserOutlined />} placeholder="用户名" />
+            <Input prefix={<UserOutlined />} placeholder="邮箱" />
           </Form.Item>
           <Form.Item
             name="password"

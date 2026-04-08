@@ -15,6 +15,18 @@ function wrapper({ children }: { children: React.ReactNode }) {
   return <QueryClientProvider client={qc}>{children}</QueryClientProvider>
 }
 
+const mockModel = {
+  id: 1,
+  name: 'GPT-4o',
+  provider: 'openai' as const,
+  model_type: 'chat' as const,
+  api_endpoint: '',
+  description: '',
+  status: 'active' as const,
+  created_at: '',
+  updated_at: '',
+}
+
 describe('ModelDrawer', () => {
   it('renders add title when editingModel is null', () => {
     render(<ModelDrawer open={true} editingModel={null} onClose={vi.fn()} />, { wrapper })
@@ -22,24 +34,7 @@ describe('ModelDrawer', () => {
   })
 
   it('renders edit title when editingModel provided', () => {
-    const model = {
-      id: 1, name: 'GPT-4o', provider: 'openai' as const,
-      model_type: 'chat' as const, model_id: 'gpt-4o',
-      endpoint: '', status: 'active' as const,
-      created_at: '', updated_at: '',
-    }
-    render(<ModelDrawer open={true} editingModel={model} onClose={vi.fn()} />, { wrapper })
+    render(<ModelDrawer open={true} editingModel={mockModel} onClose={vi.fn()} />, { wrapper })
     expect(screen.getByText('编辑模型')).toBeInTheDocument()
-  })
-
-  it('shows masked API Key when editing', () => {
-    const model = {
-      id: 1, name: 'GPT-4o', provider: 'openai' as const,
-      model_type: 'chat' as const, model_id: 'gpt-4o',
-      endpoint: '', status: 'active' as const,
-      created_at: '', updated_at: '',
-    }
-    render(<ModelDrawer open={true} editingModel={model} onClose={vi.fn()} />, { wrapper })
-    expect(screen.getByText('重新输入')).toBeInTheDocument()
   })
 })

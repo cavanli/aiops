@@ -1,43 +1,58 @@
-export type TemplateType = 'shell' | 'helm' | 'docker-compose'
+export type ScriptType = 'shell' | 'python' | 'helm' | 'docker-compose'
 export type TaskStatus = 'pending' | 'running' | 'success' | 'failed' | 'cancelled'
+export type DeployStrategy = 'fail_fast' | 'continue_on_failure'
 
 export interface DeploymentTemplate {
   id: number
   name: string
-  type: TemplateType
   description: string
+  script_type: ScriptType
   script_content: string
+  params: Record<string, any>
+  health_check: Record<string, any>
+  created_by: number
   created_at: string
   updated_at: string
 }
 
 export interface CreateTemplateRequest {
   name: string
-  type: TemplateType
+  script_type: ScriptType
   description?: string
   script_content: string
+  params?: Record<string, any>
+  health_check?: Record<string, any>
 }
 
-export interface UpdateTemplateRequest extends Partial<CreateTemplateRequest> {}
+export interface UpdateTemplateRequest {
+  name?: string
+  script_type?: ScriptType
+  description?: string
+  script_content?: string
+  params?: Record<string, any>
+  health_check?: Record<string, any>
+}
 
 export interface DeploymentTask {
   id: number
   template_id: number
-  template_name: string
   host_ids: number[]
-  target_hosts: string[]
+  params: Record<string, any>
+  strategy: DeployStrategy
   status: TaskStatus
-  fail_fast: boolean
-  logs: string
-  started_at: string | null
-  finished_at: string | null
+  logs: any[]
+  start_time: string | null
+  end_time: string | null
+  created_by: number
   created_at: string
+  updated_at: string
 }
 
 export interface CreateTaskRequest {
   template_id: number
   host_ids: number[]
-  fail_fast: boolean
+  params?: Record<string, any>
+  strategy?: DeployStrategy
 }
 
 export interface DashboardStats {

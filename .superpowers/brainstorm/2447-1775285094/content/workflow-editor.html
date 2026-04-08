@@ -1,0 +1,75 @@
+<h2>工作流编辑器：MVP 实现方式</h2>
+<p class="subtitle">工作流模块是最复杂的部分，MVP 阶段选哪种方案？</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>真实可视化画布（ReactFlow）</h3>
+      <p>引入 ReactFlow 库，支持拖拽节点、连线、缩放</p>
+      <div style="margin-top:8px;display:flex;gap:12px;">
+        <div>
+          <div style="font-size:12px;color:#10b981;font-weight:600">优点</div>
+          <ul style="font-size:12px;color:#475569;margin:4px 0 0 0;padding-left:16px">
+            <li>符合 PRD 可视化编排要求</li>
+            <li>用户体验好</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size:12px;color:#ef4444;font-weight:600">缺点</div>
+          <ul style="font-size:12px;color:#475569;margin:4px 0 0 0;padding-left:16px">
+            <li>实现复杂度最高</li>
+            <li>单独占一个 Plan</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>简化版：节点列表 + JSON 编辑器</h3>
+      <p>用列表方式管理节点顺序，高级用户可直接编辑 JSON</p>
+      <div style="margin-top:8px;display:flex;gap:12px;">
+        <div>
+          <div style="font-size:12px;color:#10b981;font-weight:600">优点</div>
+          <ul style="font-size:12px;color:#475569;margin:4px 0 0 0;padding-left:16px">
+            <li>实现简单，快速上线</li>
+            <li>后端 API 已就绪</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size:12px;color:#ef4444;font-weight:600">缺点</div>
+          <ul style="font-size:12px;color:#475569;margin:4px 0 0 0;padding-left:16px">
+            <li>不符合 PRD 可视化要求</li>
+            <li>用户体验较差</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>MVP 先做列表，v1.1 升级画布</h3>
+      <p>MVP 用简化列表快速交付，v1.1 迭代替换为 ReactFlow 画布</p>
+      <div style="margin-top:8px;display:flex;gap:12px;">
+        <div>
+          <div style="font-size:12px;color:#10b981;font-weight:600">优点</div>
+          <ul style="font-size:12px;color:#475569;margin:4px 0 0 0;padding-left:16px">
+            <li>MVP 快速上线</li>
+            <li>数据结构已为画布设计</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size:12px;color:#ef4444;font-weight:600">缺点</div>
+          <ul style="font-size:12px;color:#475569;margin:4px 0 0 0;padding-left:16px">
+            <li>需要两次开发工作流页</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

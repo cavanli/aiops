@@ -2,9 +2,16 @@ import client from './client'
 import type { ApiResponse } from '@/types/auth'
 import type { Workflow, CreateWorkflowRequest, UpdateWorkflowRequest } from '@/types/workflow'
 
+interface PaginatedResponse<T> {
+  items: T[]
+  total: number
+  page: number
+  page_size: number
+}
+
 export const workflowsApi = {
   list: () =>
-    client.get<ApiResponse<Workflow[]>>('/api/v1/workflows'),
+    client.get<ApiResponse<PaginatedResponse<Workflow>>>('/api/v1/workflows'),
   get: (id: number) =>
     client.get<ApiResponse<Workflow>>(`/api/v1/workflows/${id}`),
   create: (data: CreateWorkflowRequest) =>

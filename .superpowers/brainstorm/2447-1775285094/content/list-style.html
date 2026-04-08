@@ -1,0 +1,94 @@
+<h2>列表页布局风格</h2>
+<p class="subtitle">主机管理、模型广场、工作流、部署模板等列表页采用哪种风格？</p>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#f8fafc;padding:12px;border-radius:6px;font-size:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <span style="font-weight:600;color:#1e293b">主机管理</span>
+          <div style="background:#2563EB;color:#fff;padding:4px 10px;border-radius:4px;font-size:11px">+ 添加主机</div>
+        </div>
+        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;overflow:hidden;">
+          <div style="display:grid;grid-template-columns:2fr 1.5fr 1fr 1fr;padding:6px 8px;background:#f1f5f9;font-size:11px;color:#64748b;font-weight:600">
+            <span>主机名</span><span>IP地址</span><span>状态</span><span>操作</span>
+          </div>
+          <div style="display:grid;grid-template-columns:2fr 1.5fr 1fr 1fr;padding:7px 8px;font-size:11px;border-top:1px solid #f1f5f9">
+            <span>prod-web-01</span><span>192.168.1.10</span><span style="color:#10b981">● 在线</span><span style="color:#2563EB">编辑</span>
+          </div>
+          <div style="display:grid;grid-template-columns:2fr 1.5fr 1fr 1fr;padding:7px 8px;font-size:11px;border-top:1px solid #f1f5f9">
+            <span>prod-db-01</span><span>192.168.1.11</span><span style="color:#f59e0b">● 未知</span><span style="color:#2563EB">编辑</span>
+          </div>
+          <div style="display:grid;grid-template-columns:2fr 1.5fr 1fr 1fr;padding:7px 8px;font-size:11px;border-top:1px solid #f1f5f9">
+            <span>dev-app-02</span><span>10.0.0.5</span><span style="color:#ef4444">● 离线</span><span style="color:#2563EB">编辑</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — 表格（Table）</h3>
+      <p>Ant Design Table，紧凑信息密度，适合数量多的场景</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#f8fafc;padding:12px;border-radius:6px;font-size:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <span style="font-weight:600;color:#1e293b">模型广场</span>
+          <div style="background:#2563EB;color:#fff;padding:4px 10px;border-radius:4px;font-size:11px">+ 接入模型</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+          <div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:10px;">
+            <div style="font-size:11px;font-weight:600;margin-bottom:2px">GPT-4o</div>
+            <div style="font-size:10px;color:#64748b">OpenAI · chat</div>
+            <div style="margin-top:6px;font-size:10px;color:#10b981">● 已启用</div>
+          </div>
+          <div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:10px;">
+            <div style="font-size:11px;font-weight:600;margin-bottom:2px">Claude 3.5</div>
+            <div style="font-size:10px;color:#64748b">Anthropic · chat</div>
+            <div style="margin-top:6px;font-size:10px;color:#10b981">● 已启用</div>
+          </div>
+          <div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:10px;">
+            <div style="font-size:11px;font-weight:600;margin-bottom:2px">DeepSeek-V3</div>
+            <div style="font-size:10px;color:#64748b">DeepSeek · chat</div>
+            <div style="margin-top:6px;font-size:10px;color:#f59e0b">● 未测试</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — 卡片网格（Card Grid）</h3>
+      <p>卡片式，更直观，适合模型广场等"展示型"数据</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#f8fafc;padding:12px;border-radius:6px;font-size:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <span style="font-weight:600;color:#1e293b">工作流</span>
+          <div style="background:#2563EB;color:#fff;padding:4px 10px;border-radius:4px;font-size:11px">+ 新建</div>
+        </div>
+        <!-- Tabs -->
+        <div style="display:flex;gap:4px;margin-bottom:8px;border-bottom:1px solid #e2e8f0;padding-bottom:4px">
+          <span style="font-size:11px;color:#2563EB;font-weight:600;border-bottom:2px solid #2563EB;padding-bottom:2px">所有</span>
+          <span style="font-size:11px;color:#64748b;padding:0 6px">运行中</span>
+          <span style="font-size:11px;color:#64748b;padding:0 6px">已停用</span>
+        </div>
+        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;overflow:hidden;">
+          <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;padding:6px 8px;background:#f1f5f9;font-size:11px;color:#64748b;font-weight:600">
+            <span>名称</span><span>状态</span><span>上次执行</span><span>操作</span>
+          </div>
+          <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;padding:7px 8px;font-size:11px;border-top:1px solid #f1f5f9">
+            <span>部署流水线</span><span style="color:#10b981">active</span><span style="color:#64748b">2h前</span><span style="color:#2563EB">执行</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — 按模块混用</h3>
+      <p>模型广场用卡片，其他（主机/工作流/部署）用表格 + Tab筛选</p>
+    </div>
+  </div>
+</div>

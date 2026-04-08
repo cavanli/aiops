@@ -54,9 +54,9 @@ export default function ModelList() {
       render: (v: string) => (v === 'chat' ? '对话' : '嵌入'),
     },
     {
-      title: 'Endpoint',
-      dataIndex: 'endpoint',
-      key: 'endpoint',
+      title: 'API Endpoint',
+      dataIndex: 'api_endpoint',
+      key: 'api_endpoint',
       render: (v: string) => v || '-',
     },
     {

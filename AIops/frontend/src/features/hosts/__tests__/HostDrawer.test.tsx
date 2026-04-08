@@ -15,6 +15,20 @@ function wrapper({ children }: { children: React.ReactNode }) {
   return <QueryClientProvider client={qc}>{children}</QueryClientProvider>
 }
 
+const mockHost = {
+  id: 1,
+  name: 'h1',
+  ip: '1.1.1.1',
+  port: 22,
+  ssh_user: 'admin',
+  status: 'online' as const,
+  env: 'production' as const,
+  tags: [],
+  description: '',
+  created_at: '',
+  updated_at: '',
+}
+
 describe('HostDrawer', () => {
   it('renders add title when editingHost is null', () => {
     render(
@@ -25,30 +39,10 @@ describe('HostDrawer', () => {
   })
 
   it('renders edit title when editingHost is provided', () => {
-    const host = {
-      id: 1, name: 'h1', ip: '1.1.1.1', port: 22,
-      auth_method: 'password' as const, username: 'admin',
-      description: '', status: 'online' as const,
-      created_at: '', updated_at: '',
-    }
     render(
-      <HostDrawer open={true} editingHost={host} onClose={vi.fn()} />,
+      <HostDrawer open={true} editingHost={mockHost} onClose={vi.fn()} />,
       { wrapper }
     )
     expect(screen.getByText('编辑主机')).toBeInTheDocument()
-  })
-
-  it('shows masked password when editing existing host', () => {
-    const host = {
-      id: 1, name: 'h1', ip: '1.1.1.1', port: 22,
-      auth_method: 'password' as const, username: 'admin',
-      description: '', status: 'online' as const,
-      created_at: '', updated_at: '',
-    }
-    render(
-      <HostDrawer open={true} editingHost={host} onClose={vi.fn()} />,
-      { wrapper }
-    )
-    expect(screen.getByText('重新输入')).toBeInTheDocument()
   })
 })

@@ -1,0 +1,82 @@
+<h2>新建 / 编辑表单的呈现方式</h2>
+<p class="subtitle">点击「添加主机」「编辑模型」等操作时，表单如何出现？</p>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#f8fafc;padding:12px;border-radius:6px;font-size:12px;position:relative;min-height:120px;">
+        <!-- Background table -->
+        <div style="opacity:0.35;">
+          <div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;overflow:hidden;">
+            <div style="display:grid;grid-template-columns:2fr 1.5fr 1fr;padding:6px 8px;background:#f1f5f9;font-size:11px;color:#64748b;">
+              <span>主机名</span><span>IP</span><span>状态</span>
+            </div>
+            <div style="display:grid;grid-template-columns:2fr 1.5fr 1fr;padding:6px 8px;font-size:11px;border-top:1px solid #f1f5f9">
+              <span>prod-01</span><span>192.168.1.10</span><span style="color:#10b981">在线</span>
+            </div>
+          </div>
+        </div>
+        <!-- Drawer -->
+        <div style="position:absolute;right:0;top:0;width:55%;height:100%;background:#fff;border-left:1px solid #e2e8f0;border-radius:0 6px 6px 0;padding:10px;box-shadow:-4px 0 12px rgba(0,0,0,0.08);">
+          <div style="font-weight:600;font-size:11px;margin-bottom:8px;color:#1e293b">添加主机</div>
+          <div style="margin-bottom:6px"><div style="font-size:10px;color:#64748b;margin-bottom:2px">主机名</div><div style="border:1px solid #e2e8f0;border-radius:3px;padding:4px 6px;font-size:10px;color:#94a3b8">输入主机名...</div></div>
+          <div style="margin-bottom:6px"><div style="font-size:10px;color:#64748b;margin-bottom:2px">IP 地址</div><div style="border:1px solid #e2e8f0;border-radius:3px;padding:4px 6px;font-size:10px;color:#94a3b8">192.168.x.x</div></div>
+          <div style="display:flex;gap:4px;margin-top:8px;justify-content:flex-end"><div style="border:1px solid #e2e8f0;border-radius:3px;padding:4px 8px;font-size:10px">取消</div><div style="background:#2563EB;color:#fff;border-radius:3px;padding:4px 8px;font-size:10px">确定</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — 侧边抽屉（Drawer）</h3>
+      <p>从右侧滑出，不遮挡列表，适合字段较多的表单</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#f8fafc;padding:12px;border-radius:6px;font-size:12px;position:relative;min-height:120px;">
+        <!-- Background blur -->
+        <div style="opacity:0.3;">
+          <div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;overflow:hidden;height:60px;"></div>
+        </div>
+        <!-- Modal overlay -->
+        <div style="position:absolute;inset:0;background:rgba(0,0,0,0.25);border-radius:6px;display:flex;align-items:center;justify-content:center;">
+          <div style="background:#fff;border-radius:6px;padding:14px;width:70%;box-shadow:0 10px 25px rgba(0,0,0,0.15);">
+            <div style="font-weight:600;font-size:11px;margin-bottom:8px;color:#1e293b">添加主机</div>
+            <div style="margin-bottom:5px"><div style="font-size:10px;color:#64748b;margin-bottom:2px">主机名</div><div style="border:1px solid #e2e8f0;border-radius:3px;padding:3px 6px;font-size:10px;color:#94a3b8">输入...</div></div>
+            <div style="margin-bottom:5px"><div style="font-size:10px;color:#64748b;margin-bottom:2px">IP 地址</div><div style="border:1px solid #e2e8f0;border-radius:3px;padding:3px 6px;font-size:10px;color:#94a3b8">192.168.x.x</div></div>
+            <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><div style="border:1px solid #e2e8f0;border-radius:3px;padding:3px 8px;font-size:10px">取消</div><div style="background:#2563EB;color:#fff;border-radius:3px;padding:3px 8px;font-size:10px">确定</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — 弹窗（Modal）</h3>
+      <p>居中弹出，经典交互，适合字段少的简单表单</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#f8fafc;padding:12px;border-radius:6px;font-size:12px;">
+        <div style="display:flex;align-items:center;gap:4px;margin-bottom:8px;">
+          <span style="font-size:10px;color:#64748b">主机管理</span>
+          <span style="font-size:10px;color:#94a3b8">›</span>
+          <span style="font-size:10px;color:#2563EB;font-weight:600">添加主机</span>
+        </div>
+        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:12px;">
+          <div style="font-weight:600;font-size:12px;margin-bottom:10px;color:#1e293b">添加主机</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div><div style="font-size:10px;color:#64748b;margin-bottom:2px">主机名</div><div style="border:1px solid #e2e8f0;border-radius:3px;padding:4px 6px;font-size:10px;color:#94a3b8">输入...</div></div>
+            <div><div style="font-size:10px;color:#64748b;margin-bottom:2px">IP 地址</div><div style="border:1px solid #e2e8f0;border-radius:3px;padding:4px 6px;font-size:10px;color:#94a3b8">192.168.x.x</div></div>
+            <div><div style="font-size:10px;color:#64748b;margin-bottom:2px">SSH 端口</div><div style="border:1px solid #e2e8f0;border-radius:3px;padding:4px 6px;font-size:10px;color:#94a3b8">22</div></div>
+            <div><div style="font-size:10px;color:#64748b;margin-bottom:2px">认证方式</div><div style="border:1px solid #e2e8f0;border-radius:3px;padding:4px 6px;font-size:10px;color:#94a3b8">密钥 ▾</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — 独立页面</h3>
+      <p>跳转到新页面编辑，面包屑导航，适合字段非常多的场景（如 SSH Key 粘贴）</p>
+    </div>
+  </div>
+</div>

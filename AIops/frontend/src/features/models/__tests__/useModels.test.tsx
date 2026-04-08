@@ -12,8 +12,8 @@ const mockModel: Model = {
   name: 'GPT-4o',
   provider: 'openai',
   model_type: 'chat',
-  model_id: 'gpt-4o',
-  endpoint: '',
+  api_endpoint: '',
+  description: '',
   status: 'active',
   created_at: '2026-04-04T00:00:00Z',
   updated_at: '2026-04-04T00:00:00Z',
@@ -29,7 +29,7 @@ function makeWrapper() {
 describe('useModels', () => {
   beforeEach(() => {
     vi.mocked(modelsApi.list).mockResolvedValue({
-      data: { data: [mockModel], code: 0, message: 'ok' },
+      data: { data: { items: [mockModel], total: 1, page: 1, page_size: 10 }, code: 0, message: 'ok' },
     } as any)
   })
 

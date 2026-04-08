@@ -12,10 +12,11 @@ const mockHost: Host = {
   name: 'test-host',
   ip: '192.168.1.1',
   port: 22,
-  auth_method: 'password',
-  username: 'admin',
-  description: '',
+  ssh_user: 'admin',
   status: 'online',
+  env: 'production',
+  tags: [],
+  description: '',
   created_at: '2026-04-04T00:00:00Z',
   updated_at: '2026-04-04T00:00:00Z',
 }
@@ -29,7 +30,9 @@ function makeWrapper() {
 
 describe('useHosts', () => {
   beforeEach(() => {
-    vi.mocked(hostsApi.list).mockResolvedValue({ data: { data: [mockHost], code: 0, message: 'ok' } } as any)
+    vi.mocked(hostsApi.list).mockResolvedValue({
+      data: { data: { items: [mockHost], total: 1, page: 1, page_size: 10 }, code: 0, message: 'ok' },
+    } as any)
   })
 
   it('fetches host list', async () => {

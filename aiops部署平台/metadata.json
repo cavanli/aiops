@@ -1,0 +1,7 @@
+{
+  "name": "AIOps部署平台",
+  "description": "开源原创的AIOps部署中台，实现服务器自动化部署、环境配置、部署实施与测试验证。",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

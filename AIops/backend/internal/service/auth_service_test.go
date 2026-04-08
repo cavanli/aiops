@@ -29,7 +29,7 @@ func TestAuthService_RegisterAndLogin(t *testing.T) {
 		t.Fatalf("register failed: %v", err)
 	}
 
-	accessToken, _, err := svc.Login("bob@example.com", "password123")
+	accessToken, _, _, err := svc.Login("bob@example.com", "password123")
 	if err != nil {
 		t.Fatalf("login failed: %v", err)
 	}
@@ -42,7 +42,7 @@ func TestAuthService_Login_WrongPassword(t *testing.T) {
 	svc := setupAuthService(t)
 	svc.Register("eve", "eve@example.com", "correct")
 
-	_, _, err := svc.Login("eve@example.com", "wrong")
+	_, _, _, err := svc.Login("eve@example.com", "wrong")
 	if err == nil {
 		t.Error("expected error for wrong password")
 	}

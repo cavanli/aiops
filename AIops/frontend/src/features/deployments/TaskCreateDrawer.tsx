@@ -1,4 +1,4 @@
-import { Drawer, Form, Select, Switch, Button, Space } from 'antd'
+import { Drawer, Form, Select, Button, Space } from 'antd'
 import { useTemplates, useCreateTask } from './useDeployments'
 import { useHosts } from '@/features/hosts/useHosts'
 
@@ -18,7 +18,7 @@ export default function TaskCreateDrawer({ open, onClose }: Props) {
     await createTask.mutateAsync({
       template_id: values.template_id,
       host_ids: values.host_ids,
-      fail_fast: values.fail_fast ?? true,
+      strategy: values.strategy,
     })
     form.resetFields()
     onClose()
@@ -39,11 +39,11 @@ export default function TaskCreateDrawer({ open, onClose }: Props) {
         </Space>
       }
     >
-      <Form form={form} layout="vertical" initialValues={{ fail_fast: true }}>
+      <Form form={form} layout="vertical" initialValues={{ strategy: 'fail_fast' }}>
         <Form.Item name="template_id" label="部署模板" rules={[{ required: true, message: '请选择模板' }]}>
           <Select
             placeholder="选择部署模板"
-            options={templates.map((t) => ({ label: `${t.name} (${t.type})`, value: t.id }))}
+            options={templates.map((t) => ({ label: `${t.name} (${t.script_type})`, value: t.id }))}
           />
         </Form.Item>
         <Form.Item name="host_ids" label="目标主机" rules={[{ required: true, message: '请选择至少一台主机' }]}>
@@ -53,8 +53,13 @@ export default function TaskCreateDrawer({ open, onClose }: Props) {
             options={hosts.map((h) => ({ label: `${h.name} (${h.ip})`, value: h.id }))}
           />
         </Form.Item>
-        <Form.Item name="fail_fast" label="失败策略" valuePropName="checked">
-          <Switch checkedChildren="遇错即止" unCheckedChildren="继续执行" />
+        <Form.Item name="strategy" label="失败策略">
+          <Select
+            options={[
+              { label: '遇错即止 (Fail Fast)', value: 'fail_fast' },
+              { label: '继续执行 (Continue)', value: 'continue_on_failure' },
+            ]}
+          />
         </Form.Item>
       </Form>
     </Drawer>

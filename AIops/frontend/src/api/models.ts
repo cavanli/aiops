@@ -2,9 +2,16 @@ import client from './client'
 import type { ApiResponse } from '@/types/auth'
 import type { Model, CreateModelRequest, UpdateModelRequest, TestModelResult } from '@/types/model'
 
+interface PaginatedResponse<T> {
+  items: T[]
+  total: number
+  page: number
+  page_size: number
+}
+
 export const modelsApi = {
   list: () =>
-    client.get<ApiResponse<Model[]>>('/api/v1/models'),
+    client.get<ApiResponse<PaginatedResponse<Model>>>('/api/v1/models'),
   get: (id: number) =>
     client.get<ApiResponse<Model>>(`/api/v1/models/${id}`),
   create: (data: CreateModelRequest) =>

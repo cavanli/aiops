@@ -6,7 +6,7 @@ import type { UpdateModelRequest } from '@/types/model'
 export function useModels() {
   return useQuery({
     queryKey: ['models'],
-    queryFn: () => modelsApi.list().then((r) => r.data.data),
+    queryFn: () => modelsApi.list().then((r) => r.data.data.items),
   })
 }
 

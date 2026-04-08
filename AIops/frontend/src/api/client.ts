@@ -68,16 +68,16 @@ client.interceptors.response.use(
 
       try {
         const res = await axios.post(
-          `${import.meta.env.VITE_API_BASE_URL}/api/v1/auth/refresh`,
+          '/api/v1/auth/refresh',
           { refresh_token: refreshToken }
         );
-        const { token: newToken, refresh_token: newRefresh } = res.data.data;
+        const { token: newToken } = res.data.data;
         if (!user) {
           clearAuth();
           window.location.href = '/login';
           return Promise.reject(error);
         }
-        setAuth(newToken, newRefresh, user);
+        setAuth(newToken, refreshToken, user);
         processQueue(null, newToken);
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return client(originalRequest);

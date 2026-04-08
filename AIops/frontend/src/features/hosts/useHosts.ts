@@ -6,7 +6,7 @@ import type { UpdateHostRequest } from '@/types/host'
 export function useHosts() {
   return useQuery({
     queryKey: ['hosts'],
-    queryFn: () => hostsApi.list().then((r) => r.data.data),
+    queryFn: () => hostsApi.list().then((r) => r.data.data.items),
   })
 }
 

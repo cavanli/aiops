@@ -64,16 +64,22 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	accessToken, refreshToken, err := h.authSvc.Login(req.Email, req.Password)
+	accessToken, refreshToken, user, err := h.authSvc.Login(req.Email, req.Password)
 	if err != nil {
 		response.Fail(c, http.StatusUnauthorized, response.ErrCodeUnauthorized, err.Error())
 		return
 	}
 
 	response.Success(c, gin.H{
-		"access_token":  accessToken,
+		"token":         accessToken,
 		"refresh_token": refreshToken,
 		"token_type":    "Bearer",
+		"user": gin.H{
+			"id":       user.ID,
+			"username": user.Username,
+			"email":    user.Email,
+			"role":     user.Role,
+		},
 	})
 }
 
@@ -90,7 +96,7 @@ func (h *AuthHandler) Refresh(c *gin.Context) {
 		return
 	}
 
-	response.Success(c, gin.H{"access_token": accessToken, "token_type": "Bearer"})
+	response.Success(c, gin.H{"token": accessToken, "token_type": "Bearer"})
 }
 
 func (h *AuthHandler) Logout(c *gin.Context) {

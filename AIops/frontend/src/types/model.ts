@@ -7,8 +7,8 @@ export interface Model {
   name: string
   provider: ModelProvider
   model_type: ModelType
-  model_id: string
-  endpoint: string
+  api_endpoint: string
+  description: string
   status: ModelStatus
   created_at: string
   updated_at: string
@@ -18,15 +18,20 @@ export interface CreateModelRequest {
   name: string
   provider: ModelProvider
   model_type: ModelType
-  model_id: string
-  endpoint?: string
-  api_key: string
-  status: ModelStatus
+  api_endpoint?: string
+  description?: string
 }
 
-export interface UpdateModelRequest extends Partial<CreateModelRequest> {}
+export interface UpdateModelRequest {
+  name?: string
+  provider?: ModelProvider
+  model_type?: ModelType
+  api_endpoint?: string
+  description?: string
+  status?: ModelStatus
+}
 
 export interface TestModelResult {
-  latency_ms: number
+  latency_ms?: number
   message: string
 }

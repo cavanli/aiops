@@ -1,0 +1,103 @@
+<h2>各模块页面布局预览</h2>
+<p class="subtitle">确认每个模块的页面结构是否符合预期</p>
+
+<div class="section">
+<h3>整体框架（所有页面共用）</h3>
+<div class="mockup">
+  <div class="mockup-header">AppLayout</div>
+  <div class="mockup-body" style="padding:0;display:flex;min-height:320px;">
+    <!-- Sider -->
+    <div style="width:180px;background:#fff;border-right:1px solid #e2e8f0;padding:0;flex-shrink:0;">
+      <div style="height:48px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;">
+        <span style="color:#2563EB;font-weight:700;font-size:14px">AIOps</span>
+      </div>
+      <div style="padding:8px 0;">
+        <div style="padding:8px 16px;font-size:12px;color:#2563EB;background:#eff6ff;font-weight:600;display:flex;align-items:center;gap:8px"><span>⬜</span> 概览</div>
+        <div style="padding:8px 16px;font-size:12px;color:#64748b;display:flex;align-items:center;gap:8px"><span>🖥</span> 主机管理</div>
+        <div style="padding:8px 16px;font-size:12px;color:#64748b;display:flex;align-items:center;gap:8px"><span>🤖</span> 模型广场</div>
+        <div style="padding:8px 16px;font-size:12px;color:#64748b;display:flex;align-items:center;gap:8px"><span>🔀</span> 工作流</div>
+        <div style="padding:8px 16px;font-size:12px;color:#64748b;display:flex;align-items:center;gap:8px"><span>🚀</span> 部署执行</div>
+      </div>
+    </div>
+    <!-- Main -->
+    <div style="flex:1;display:flex;flex-direction:column;">
+      <!-- Header -->
+      <div style="height:48px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;padding:0 16px;">
+        <span style="font-size:16px;color:#64748b">≡</span>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#64748b">
+          <div style="width:24px;height:24px;border-radius:50%;background:#2563EB;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px">A</div>
+          <span>admin ▾</span>
+        </div>
+      </div>
+      <!-- Content -->
+      <div style="flex:1;padding:16px;background:#f8fafc;">
+        <div style="background:#fff;border-radius:8px;padding:16px;height:100%;border:1px dashed #cbd5e1;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px">
+          页面内容区（Content）
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="section">
+<h3>路由结构</h3>
+<div style="background:#1e293b;border-radius:8px;padding:16px;font-family:monospace;font-size:12px;color:#94a3b8;line-height:1.8">
+  <span style="color:#60a5fa">/login</span> → Login.tsx（无需认证）<br>
+  <span style="color:#60a5fa">/</span> → AppLayout（AuthGuard 保护）<br>
+  &nbsp;&nbsp;<span style="color:#34d399">index</span> → Dashboard.tsx<br>
+  &nbsp;&nbsp;<span style="color:#34d399">/hosts</span> → Hosts.tsx（列表 + 抽屉）<br>
+  &nbsp;&nbsp;<span style="color:#34d399">/models</span> → Models.tsx（列表 + 抽屉）<br>
+  &nbsp;&nbsp;<span style="color:#34d399">/workflows</span> → Workflows.tsx（列表）<br>
+  &nbsp;&nbsp;<span style="color:#34d399">/workflows/:id/edit</span> → WorkflowEditor.tsx（ReactFlow 全屏）<br>
+  &nbsp;&nbsp;<span style="color:#34d399">/deployments</span> → Deployments.tsx（模板 + 任务 Tab）<br>
+  <span style="color:#60a5fa">*</span> → redirect to /
+</div>
+</div>
+
+<div class="section">
+<h3>工作流编辑器（独立全屏页）</h3>
+<div class="mockup">
+  <div class="mockup-header">/workflows/:id/edit — ReactFlow 全屏画布</div>
+  <div class="mockup-body" style="padding:0;min-height:160px;background:#f1f5f9;position:relative;">
+    <div style="position:absolute;top:0;left:0;right:0;height:40px;background:#fff;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;padding:0 12px;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;">
+        <span style="color:#64748b">工作流</span>
+        <span style="color:#94a3b8">›</span>
+        <span style="color:#1e293b;font-weight:600">部署流水线</span>
+      </div>
+      <div style="display:flex;gap:6px;">
+        <div style="border:1px solid #e2e8f0;border-radius:4px;padding:3px 10px;font-size:11px;color:#64748b">保存草稿</div>
+        <div style="background:#2563EB;color:#fff;border-radius:4px;padding:3px 10px;font-size:11px">发布</div>
+      </div>
+    </div>
+    <!-- Node palette left -->
+    <div style="position:absolute;top:40px;left:0;width:100px;bottom:0;background:#fff;border-right:1px solid #e2e8f0;padding:8px;">
+      <div style="font-size:10px;color:#64748b;margin-bottom:6px">节点类型</div>
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:4px 6px;font-size:10px;margin-bottom:4px;cursor:pointer">Shell 脚本</div>
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:4px 6px;font-size:10px;margin-bottom:4px;cursor:pointer">HTTP 请求</div>
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:4px 6px;font-size:10px;margin-bottom:4px;cursor:pointer">LLM 调用</div>
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:4px 6px;font-size:10px;margin-bottom:4px;cursor:pointer">条件分支</div>
+    </div>
+    <!-- Canvas area -->
+    <div style="position:absolute;top:40px;left:100px;right:0;bottom:0;display:flex;align-items:center;justify-content:center;">
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div style="background:#fff;border:2px solid #10b981;border-radius:6px;padding:8px 14px;font-size:11px;text-align:center">
+          <div style="font-size:10px;color:#64748b">开始</div>
+        </div>
+        <div style="color:#94a3b8;font-size:16px">→</div>
+        <div style="background:#fff;border:1px solid #2563EB;border-radius:6px;padding:8px 14px;font-size:11px;text-align:center">
+          <div style="font-size:10px;color:#64748b">Shell 脚本</div>
+          <div style="font-size:10px;font-weight:600">install deps</div>
+        </div>
+        <div style="color:#94a3b8;font-size:16px">→</div>
+        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:8px 14px;font-size:11px;text-align:center;border-style:dashed">
+          <div style="font-size:10px;color:#94a3b8">拖拽节点到此</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<p style="margin-top:16px;color:#64748b;font-size:13px">这个整体页面和路由结构没问题吗？</p>

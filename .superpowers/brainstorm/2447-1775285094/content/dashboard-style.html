@@ -1,0 +1,77 @@
+<h2>概览页（Dashboard）展示什么内容？</h2>
+<p class="subtitle">选择最符合你期望的内容风格</p>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#f8fafc;padding:16px;border-radius:6px;font-size:12px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:12px;">
+          <div style="background:#2563EB;color:#fff;border-radius:6px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:700">12</div><div>主机总数</div></div>
+          <div style="background:#10b981;color:#fff;border-radius:6px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:700">5</div><div>模型接入</div></div>
+          <div style="background:#f59e0b;color:#fff;border-radius:6px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:700">3</div><div>进行中部署</div></div>
+          <div style="background:#8b5cf6;color:#fff;border-radius:6px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:700">8</div><div>工作流</div></div>
+        </div>
+        <div style="background:#fff;border-radius:6px;padding:8px;border:1px solid #e2e8f0;">
+          <div style="font-size:11px;color:#64748b;margin-bottom:4px">最近部署活动</div>
+          <div style="font-size:11px;color:#1e293b">• nginx-v2 → prod-01 ✓ 成功</div>
+          <div style="font-size:11px;color:#1e293b">• redis-cluster → dev-02 ⏳ 进行中</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — 统计卡片 + 最近活动</h3>
+      <p>4 个数字卡片 + 最近部署/工作流执行记录列表</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#f8fafc;padding:16px;border-radius:6px;font-size:12px;">
+        <div style="background:#fff;border-radius:6px;padding:10px;border:1px solid #e2e8f0;margin-bottom:8px;">
+          <div style="font-size:11px;font-weight:600;color:#1e293b;margin-bottom:6px">快捷入口</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <div style="background:#eff6ff;color:#2563EB;border-radius:4px;padding:6px 10px;font-size:11px">+ 添加主机</div>
+            <div style="background:#eff6ff;color:#2563EB;border-radius:4px;padding:6px 10px;font-size:11px">+ 接入模型</div>
+            <div style="background:#eff6ff;color:#2563EB;border-radius:4px;padding:6px 10px;font-size:11px">▶ 执行部署</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div style="background:#fff;border-radius:6px;padding:8px;border:1px solid #e2e8f0;">
+            <div style="font-size:11px;color:#64748b">最近工作流</div>
+            <div style="font-size:11px;margin-top:4px">deploy-nginx ✓</div>
+          </div>
+          <div style="background:#fff;border-radius:6px;padding:8px;border:1px solid #e2e8f0;">
+            <div style="font-size:11px;color:#64748b">系统状态</div>
+            <div style="font-size:11px;margin-top:4px;color:#10b981">● 所有服务正常</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — 快捷操作 + 状态摘要</h3>
+      <p>常用操作按钮 + 最近工作流 + 系统健康状态</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#f8fafc;padding:16px;border-radius:6px;font-size:12px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+          <div style="background:#fff;border-radius:6px;padding:10px;border:1px solid #e2e8f0;text-align:center"><div style="font-size:20px;font-weight:700;color:#2563EB">12</div><div style="color:#64748b">主机</div></div>
+          <div style="background:#fff;border-radius:6px;padding:10px;border:1px solid #e2e8f0;text-align:center"><div style="font-size:20px;font-weight:700;color:#10b981">5</div><div style="color:#64748b">模型</div></div>
+        </div>
+        <div style="background:#fff;border-radius:6px;padding:10px;border:1px solid #e2e8f0;">
+          <div style="font-size:11px;color:#64748b;margin-bottom:6px">部署成功率（近7天）</div>
+          <div style="background:#e2e8f0;border-radius:4px;height:8px;overflow:hidden;">
+            <div style="background:#10b981;width:85%;height:100%;border-radius:4px;"></div>
+          </div>
+          <div style="font-size:11px;color:#10b981;margin-top:4px">85% (17/20)</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — 统计卡片 + 趋势图表</h3>
+      <p>数字统计 + 部署成功率/趋势图（需引入图表库）</p>
+    </div>
+  </div>
+</div>

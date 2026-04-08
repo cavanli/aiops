@@ -1,5 +1,17 @@
 export type WorkflowStatus = 'draft' | 'active'
-export type NodeType = 'start' | 'end' | 'shell' | 'http' | 'llm' | 'condition'
+export type NodeType =
+  | 'start'
+  | 'end'
+  | 'shell'
+  | 'http'
+  | 'llm'
+  | 'condition'
+  | 'ai_decision'
+  | 'skill'
+  | 'notification'
+  | 'blue_green'
+  | 'rollback'
+  | 'env_check'
 
 export interface WorkflowNode {
   id: string
@@ -12,7 +24,9 @@ export interface WorkflowEdge {
   id: string
   source: string
   target: string
+  sourceHandle?: string
   label?: string
+  animated?: boolean
 }
 
 export interface Workflow {

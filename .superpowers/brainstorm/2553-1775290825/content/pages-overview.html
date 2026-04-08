@@ -1,0 +1,138 @@
+<h2>各模块页面布局预览</h2>
+<p class="subtitle">确认整体框架、路由结构、工作流编辑器布局</p>
+
+<div class="section">
+<h3>整体框架（所有页面共用）</h3>
+<div class="mockup">
+  <div class="mockup-header">AppLayout — 左侧导航 + 顶部 Header + 内容区</div>
+  <div class="mockup-body" style="padding:0;display:flex;min-height:280px;">
+    <div style="width:160px;background:#fff;border-right:1px solid #e2e8f0;flex-shrink:0;">
+      <div style="height:48px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;">
+        <span style="color:#2563EB;font-weight:700;font-size:14px">AIOps</span>
+      </div>
+      <div style="padding:8px 0;">
+        <div style="padding:8px 16px;font-size:12px;color:#2563EB;background:#eff6ff;font-weight:600">⬛ 概览</div>
+        <div style="padding:8px 16px;font-size:12px;color:#64748b">🖥 主机管理</div>
+        <div style="padding:8px 16px;font-size:12px;color:#64748b">🤖 模型广场</div>
+        <div style="padding:8px 16px;font-size:12px;color:#64748b">🔀 工作流</div>
+        <div style="padding:8px 16px;font-size:12px;color:#64748b">🚀 部署执行</div>
+      </div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;">
+      <div style="height:48px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;padding:0 16px;">
+        <span style="font-size:18px;color:#64748b;cursor:pointer">≡</span>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#64748b">
+          <div style="width:24px;height:24px;border-radius:50%;background:#2563EB;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px">A</div>
+          <span>admin ▾</span>
+        </div>
+      </div>
+      <div style="flex:1;padding:16px;background:#f8fafc;">
+        <div style="background:#fff;border-radius:8px;padding:16px;height:calc(100% - 32px);border:1px dashed #cbd5e1;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:12px">
+          各模块内容区
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="section">
+<h3>路由结构</h3>
+<div style="background:#1e293b;border-radius:8px;padding:16px;font-family:monospace;font-size:12px;color:#94a3b8;line-height:2">
+  <span style="color:#60a5fa">/login</span> → Login（无 Auth）<br>
+  <span style="color:#60a5fa">/</span> → AppLayout（AuthGuard 保护）<br>
+  &nbsp;&nbsp;<span style="color:#34d399">index</span> → Dashboard<br>
+  &nbsp;&nbsp;<span style="color:#34d399">/hosts</span> → 主机列表 + 右侧抽屉<br>
+  &nbsp;&nbsp;<span style="color:#34d399">/models</span> → 模型列表 + 右侧抽屉<br>
+  &nbsp;&nbsp;<span style="color:#34d399">/workflows</span> → 工作流列表<br>
+  &nbsp;&nbsp;<span style="color:#34d399">/workflows/:id/edit</span> → ReactFlow 全屏画布<br>
+  &nbsp;&nbsp;<span style="color:#34d399">/deployments</span> → 模板 Tab + 任务 Tab<br>
+  <span style="color:#60a5fa">*</span> → redirect /
+</div>
+</div>
+
+<div class="section">
+<h3>概览页（Dashboard）</h3>
+<div class="mockup">
+  <div class="mockup-header">/ — 统计卡片 + 最近活动</div>
+  <div class="mockup-body">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:16px;">
+      <div style="background:#eff6ff;border-radius:8px;padding:14px;text-align:center;border:1px solid #bfdbfe">
+        <div style="font-size:24px;font-weight:700;color:#2563EB">12</div>
+        <div style="font-size:12px;color:#64748b;margin-top:2px">主机总数</div>
+      </div>
+      <div style="background:#f0fdf4;border-radius:8px;padding:14px;text-align:center;border:1px solid #bbf7d0">
+        <div style="font-size:24px;font-weight:700;color:#16a34a">5</div>
+        <div style="font-size:12px;color:#64748b;margin-top:2px">模型接入</div>
+      </div>
+      <div style="background:#fffbeb;border-radius:8px;padding:14px;text-align:center;border:1px solid #fde68a">
+        <div style="font-size:24px;font-weight:700;color:#d97706">3</div>
+        <div style="font-size:12px;color:#64748b;margin-top:2px">进行中部署</div>
+      </div>
+      <div style="background:#f5f3ff;border-radius:8px;padding:14px;text-align:center;border:1px solid #ddd6fe">
+        <div style="font-size:24px;font-weight:700;color:#7c3aed">8</div>
+        <div style="font-size:12px;color:#64748b;margin-top:2px">工作流</div>
+      </div>
+    </div>
+    <div style="background:#f8fafc;border-radius:8px;padding:14px;border:1px solid #e2e8f0">
+      <div style="font-size:13px;font-weight:600;color:#1e293b;margin-bottom:10px">最近部署活动</div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid #f1f5f9">
+        <span>nginx-v2.1 → prod-web-01</span>
+        <span style="color:#16a34a">✓ 成功</span>
+        <span style="color:#94a3b8">2分钟前</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid #f1f5f9">
+        <span>redis-cluster → dev-02</span>
+        <span style="color:#d97706">⏳ 进行中</span>
+        <span style="color:#94a3b8">5分钟前</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;padding:6px 0">
+        <span>mysql-backup → prod-db-01</span>
+        <span style="color:#dc2626">✗ 失败</span>
+        <span style="color:#94a3b8">1小时前</span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="section">
+<h3>主机管理（其他列表页同此模式）</h3>
+<div class="mockup">
+  <div class="mockup-header">/hosts — 表格 + 右侧抽屉</div>
+  <div class="mockup-body" style="padding:0;display:flex;min-height:200px;">
+    <div style="flex:1;padding:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div style="display:flex;gap:8px;">
+          <input style="border:1px solid #e2e8f0;border-radius:6px;padding:5px 10px;font-size:12px;width:180px" placeholder="搜索主机名/IP...">
+        </div>
+        <div style="background:#2563EB;color:#fff;border-radius:6px;padding:6px 14px;font-size:12px;cursor:pointer">+ 添加主机</div>
+      </div>
+      <div style="border:1px solid #e2e8f0;border-radius:6px;overflow:hidden;font-size:12px;">
+        <div style="display:grid;grid-template-columns:2fr 1.5fr 1fr 1fr 1fr;padding:8px 12px;background:#f8fafc;font-weight:600;color:#64748b;border-bottom:1px solid #e2e8f0;">
+          <span>主机名</span><span>IP 地址</span><span>端口</span><span>状态</span><span>操作</span>
+        </div>
+        <div style="display:grid;grid-template-columns:2fr 1.5fr 1fr 1fr 1fr;padding:8px 12px;border-bottom:1px solid #f1f5f9;align-items:center;">
+          <span style="font-weight:500">prod-web-01</span><span style="color:#64748b">192.168.1.10</span><span>22</span><span style="color:#16a34a">● 在线</span><span><span style="color:#2563EB;margin-right:8px">编辑</span><span style="color:#ef4444">删除</span></span>
+        </div>
+        <div style="display:grid;grid-template-columns:2fr 1.5fr 1fr 1fr 1fr;padding:8px 12px;border-bottom:1px solid #f1f5f9;align-items:center;">
+          <span style="font-weight:500">prod-db-01</span><span style="color:#64748b">192.168.1.11</span><span>22</span><span style="color:#d97706">● 未知</span><span><span style="color:#2563EB;margin-right:8px">编辑</span><span style="color:#ef4444">删除</span></span>
+        </div>
+      </div>
+    </div>
+    <!-- Drawer preview -->
+    <div style="width:180px;border-left:1px solid #e2e8f0;padding:12px;background:#fff;flex-shrink:0;">
+      <div style="font-size:12px;font-weight:600;color:#1e293b;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #f1f5f9">编辑主机</div>
+      <div style="margin-bottom:8px"><div style="font-size:10px;color:#64748b;margin-bottom:3px">主机名</div><div style="border:1px solid #e2e8f0;border-radius:4px;padding:4px 6px;font-size:10px">prod-web-01</div></div>
+      <div style="margin-bottom:8px"><div style="font-size:10px;color:#64748b;margin-bottom:3px">IP 地址</div><div style="border:1px solid #e2e8f0;border-radius:4px;padding:4px 6px;font-size:10px">192.168.1.10</div></div>
+      <div style="margin-bottom:8px"><div style="font-size:10px;color:#64748b;margin-bottom:3px">认证方式</div><div style="border:1px solid #e2e8f0;border-radius:4px;padding:4px 6px;font-size:10px">SSH Key ▾</div></div>
+      <div style="display:flex;gap:4px;margin-top:10px">
+        <div style="flex:1;border:1px solid #e2e8f0;border-radius:4px;padding:4px;font-size:10px;text-align:center">取消</div>
+        <div style="flex:1;background:#2563EB;color:#fff;border-radius:4px;padding:4px;font-size:10px;text-align:center">保存</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<p style="margin-top:16px;color:#64748b;font-size:13px">整体布局没问题吗？</p>

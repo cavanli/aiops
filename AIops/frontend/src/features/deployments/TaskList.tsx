@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Table, Button, Space, Tag, Popconfirm, Tooltip } from 'antd'
 import { PlusOutlined, FileTextOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/es/table'
-import type { DeploymentTask, TaskStatus } from '@/types/deployment'
+import type { DeploymentTask, TaskStatus, DeployStrategy } from '@/types/deployment'
 import { useTasks, useCancelTask } from './useDeployments'
 import TaskCreateDrawer from './TaskCreateDrawer'
 import TaskLogDrawer from './TaskLogDrawer'
@@ -21,11 +21,15 @@ const statusLabel: Record<TaskStatus, string> = {
   failed: '失败',
   cancelled: '已取消',
 }
+const strategyLabel: Record<DeployStrategy, string> = {
+  fail_fast: '遇错即止',
+  continue_on_failure: '继续执行',
+}
 
 function duration(task: DeploymentTask): string {
-  if (!task.started_at) return '-'
-  const end = task.finished_at ? new Date(task.finished_at) : new Date()
-  const secs = Math.round((end.getTime() - new Date(task.started_at).getTime()) / 1000)
+  if (!task.start_time) return '-'
+  const end = task.end_time ? new Date(task.end_time) : new Date()
+  const secs = Math.round((end.getTime() - new Date(task.start_time).getTime()) / 1000)
   if (secs < 60) return `${secs}s`
   return `${Math.floor(secs / 60)}m ${secs % 60}s`
 }
@@ -38,12 +42,20 @@ export default function TaskList() {
   const cancelTask = useCancelTask()
 
   const columns: ColumnsType<DeploymentTask> = [
-    { title: '模板名称', dataIndex: 'template_name', key: 'template_name' },
+    { title: '任务 ID', dataIndex: 'id', key: 'id', width: 80 },
+    { title: '模板 ID', dataIndex: 'template_id', key: 'template_id', width: 90 },
     {
       title: '目标主机',
-      dataIndex: 'target_hosts',
-      key: 'target_hosts',
-      render: (hosts: string[]) => hosts?.join(', ') ?? '-',
+      dataIndex: 'host_ids',
+      key: 'host_ids',
+      render: (ids: number[]) => ids?.join(', ') ?? '-',
+    },
+    {
+      title: '策略',
+      dataIndex: 'strategy',
+      key: 'strategy',
+      width: 100,
+      render: (s: DeployStrategy) => strategyLabel[s] ?? s,
     },
     {
       title: '状态',
@@ -54,8 +66,8 @@ export default function TaskList() {
     },
     {
       title: '开始时间',
-      dataIndex: 'started_at',
-      key: 'started_at',
+      dataIndex: 'start_time',
+      key: 'start_time',
       render: (t: string | null) =>
         t ? new Date(t).toLocaleString('zh-CN') : '-',
     },

@@ -39,8 +39,10 @@ func main() {
 		&model.APIKey{},
 		&model.Workflow{},
 		&model.WorkflowExecution{},
-		&model.DeploymentTemplate{}, // Add
-		&model.DeploymentTask{},     // Add
+		&model.DeploymentTemplate{},
+		&model.DeploymentTask{},
+		&model.Skill{},
+		&model.Agent{},
 	)
 
 	// Crypto
@@ -95,6 +97,16 @@ func main() {
 	taskRepo := repository.NewTaskRepo(db)
 	deploymentSvc := service.NewDeploymentService(templateRepo, taskRepo, hostRepo, cryptoSvc)
 	deploymentHandler := handler.NewDeploymentHandler(deploymentSvc)
+
+	// Skills library
+	skillRepo := repository.NewSkillRepo(db)
+	skillSvc := service.NewSkillService(skillRepo)
+	skillHandler := handler.NewSkillHandler(skillSvc)
+
+	// Agents
+	agentRepo := repository.NewAgentRepo(db)
+	agentSvc := service.NewAgentService(agentRepo)
+	agentHandler := handler.NewAgentHandler(agentSvc)
 
 	// Router
 	if cfg.App.Env == "production" {
@@ -206,6 +218,26 @@ func main() {
 			deployments.POST("", middleware.RequireRole("admin", "operator"), deploymentHandler.CreateTask)
 			deployments.GET("/:id", deploymentHandler.GetTask)
 			deployments.POST("/:id/cancel", middleware.RequireRole("admin", "operator"), deploymentHandler.CancelTask)
+		}
+
+		// Skills library routes
+		skills := protected.Group("/skills")
+		{
+			skills.GET("", skillHandler.ListSkills)
+			skills.POST("", middleware.RequireRole("admin", "operator"), skillHandler.CreateSkill)
+			skills.GET("/:id", skillHandler.GetSkill)
+			skills.PUT("/:id", middleware.RequireRole("admin", "operator"), skillHandler.UpdateSkill)
+			skills.DELETE("/:id", middleware.RequireRole("admin"), skillHandler.DeleteSkill)
+		}
+
+		// Agents routes
+		agents := protected.Group("/agents")
+		{
+			agents.GET("", agentHandler.ListAgents)
+			agents.POST("", middleware.RequireRole("admin", "operator"), agentHandler.CreateAgent)
+			agents.GET("/:id", agentHandler.GetAgent)
+			agents.PUT("/:id", middleware.RequireRole("admin", "operator"), agentHandler.UpdateAgent)
+			agents.DELETE("/:id", middleware.RequireRole("admin"), agentHandler.DeleteAgent)
 		}
 	}
 

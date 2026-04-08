@@ -50,12 +50,20 @@ export default function HostList() {
     { title: '主机名', dataIndex: 'name', key: 'name' },
     { title: 'IP 地址', dataIndex: 'ip', key: 'ip' },
     { title: 'SSH 端口', dataIndex: 'port', key: 'port', width: 100 },
+    { title: 'SSH 用户', dataIndex: 'ssh_user', key: 'ssh_user', width: 100 },
     {
-      title: '认证方式',
-      dataIndex: 'auth_method',
-      key: 'auth_method',
+      title: '环境',
+      dataIndex: 'env',
+      key: 'env',
       width: 100,
-      render: (v: string) => (v === 'password' ? '密码' : 'SSH Key'),
+      render: (v: string) => {
+        const envMap: Record<string, { label: string; color: string }> = {
+          production: { label: '生产', color: 'red' },
+          staging: { label: '预发布', color: 'orange' },
+          dev: { label: '开发', color: 'blue' },
+        }
+        return v && envMap[v] ? <Tag color={envMap[v].color}>{envMap[v].label}</Tag> : '-'
+      },
     },
     {
       title: '状态',

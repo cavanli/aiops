@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(DATABASE_URL=sqlite:///./test.db SECRET_KEY=testsecret python3 -m pytest tests/test_workflow.py -v)",
+      "Bash(python generate_excel.py)",
+      "WebSearch",
+      "Bash(mkdir -p /e/Opsgit/AIops/backend)",
+      "Bash(go mod:*)",
+      "Bash(/c/Users/li602/AppData/Local/go/bin/go mod:*)",
+      "Bash(/c/Users/li602/AppData/Local/go/bin/go get:*)",
+      "Bash(cmd.exe /c \"where go\")",
+      "Bash(cmd.exe /c \"cd e:\\\\Opsgit\\\\AIops\\\\backend && go test ./internal/service -v -run TestSSHService_TestConnection 2>&1\")",
+      "Bash(cmd.exe /c \"cd /d e:\\\\Opsgit\\\\AIops\\\\backend && go version 2>&1 && echo GO_FOUND\")",
+      "Bash(powershell.exe -Command \"cd e:\\\\Opsgit\\\\AIops\\\\backend; go version\")",
+      "Bash(go build:*)",
+      "Read(//c/Program Files/Go/bin/**)",
+      "Read(//c/Go/bin/**)",
+      "Bash(make build:*)",
+      "Read(//c/Users/li602/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.7/skills/brainstorming/**)",
+      "Read(//c/Users/li602/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.7/scripts//**)",
+      "Bash(bash \"/c/Users/li602/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.7/skills/brainstorming/scripts/start-server.sh\" --project-dir \"e:/Opsgit\")"
+    ]
+  }
+}

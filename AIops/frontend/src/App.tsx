@@ -8,8 +8,14 @@ import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Hosts from './pages/Hosts'
 import Models from './pages/Models'
+import Skills from './pages/Skills'
+import Agents from './pages/Agents'
 import Workflows from './pages/Workflows'
 import Deployments from './pages/Deployments'
+import RagKnowledge from './pages/RagKnowledge'
+import Assets from './pages/Assets'
+import McpCenter from './pages/McpCenter'
+import Settings from './pages/Settings'
 
 const WorkflowEditor = React.lazy(() => import('./pages/WorkflowEditor'))
 
@@ -60,8 +66,14 @@ export default function App() {
             <Route index element={<Dashboard />} />
             <Route path="hosts" element={<Hosts />} />
             <Route path="models" element={<Models />} />
+            <Route path="skills" element={<Skills />} />
+            <Route path="agents" element={<Agents />} />
             <Route path="workflows" element={<Workflows />} />
             <Route path="deployments" element={<Deployments />} />
+            <Route path="rag" element={<RagKnowledge />} />
+            <Route path="assets" element={<Assets />} />
+            <Route path="mcp" element={<McpCenter />} />
+            <Route path="settings" element={<Settings />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />

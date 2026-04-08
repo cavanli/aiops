@@ -14,9 +14,12 @@ vi.mock('@/api/deployments')
 const mockTemplate: DeploymentTemplate = {
   id: 1,
   name: 'Deploy App',
-  type: 'shell',
+  script_type: 'shell',
   description: '',
   script_content: 'echo deploy',
+  params: {},
+  health_check: {},
+  created_by: 1,
   created_at: '2026-04-04T00:00:00Z',
   updated_at: '2026-04-04T00:00:00Z',
 }
@@ -24,15 +27,16 @@ const mockTemplate: DeploymentTemplate = {
 const mockTask: DeploymentTask = {
   id: 1,
   template_id: 1,
-  template_name: 'Deploy App',
   host_ids: [1],
-  target_hosts: ['prod-web-01'],
+  strategy: 'fail_fast',
   status: 'running',
-  fail_fast: true,
-  logs: 'Starting deployment...',
-  started_at: '2026-04-04T00:00:00Z',
-  finished_at: null,
+  logs: [],
+  params: {},
+  start_time: '2026-04-04T00:00:00Z',
+  end_time: null,
+  created_by: 1,
   created_at: '2026-04-04T00:00:00Z',
+  updated_at: '2026-04-04T00:00:00Z',
 }
 
 function makeWrapper() {
@@ -78,6 +82,6 @@ describe('useTaskPolling', () => {
     } as any)
     const { result } = renderHook(() => useTaskPolling(1), { wrapper: makeWrapper() })
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
-    expect(result.current.data?.logs).toBe('Starting deployment...')
+    expect(result.current.data?.status).toBe('running')
   })
 })

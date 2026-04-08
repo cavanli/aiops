@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useRef, useMemo } from 'react'
 import ReactFlow, {
   addEdge,
   Background,
@@ -13,8 +13,24 @@ import ReactFlow, {
 } from 'reactflow'
 import 'reactflow/dist/style.css'
 import type { NodeType, WorkflowNode, WorkflowEdge } from '@/types/workflow'
+import { NODE_TYPES } from './CustomNodes'
 
 let nodeIdCounter = 100
+
+const DEFAULT_LABEL_MAP: Record<string, string> = {
+  start:        '开始',
+  end:          '结束',
+  env_check:    '环境检测',
+  ai_decision:  'AI 分析',
+  condition:    '条件判断',
+  skill:        '技能执行',
+  blue_green:   '蓝绿部署',
+  rollback:     '回滚操作',
+  notification: '发送通知',
+  shell:        'Shell 脚本',
+  http:         'HTTP 请求',
+  llm:          'LLM 调用',
+}
 
 interface Props {
   initialNodes: WorkflowNode[]
@@ -39,7 +55,10 @@ function toRFEdge(we: WorkflowEdge): Edge {
     id: we.id,
     source: we.source,
     target: we.target,
+    sourceHandle: we.sourceHandle,
     label: we.label,
+    animated: we.animated,
+    style: we.animated ? { stroke: '#6366F1' } : undefined,
   }
 }
 
@@ -57,7 +76,9 @@ function fromRFEdge(e: Edge): WorkflowEdge {
     id: e.id,
     source: e.source,
     target: e.target,
+    sourceHandle: e.sourceHandle ?? undefined,
     label: e.label as string | undefined,
+    animated: e.animated,
   }
 }
 
@@ -72,6 +93,9 @@ export default function WorkflowCanvas({
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges.map(toRFEdge))
   const rfInstanceRef = useRef<ReactFlowInstance | null>(null)
 
+  // Stable nodeTypes reference — required by React Flow to avoid re-renders
+  const nodeTypes = useMemo(() => NODE_TYPES, [])
+
   // Register a getter so parent can call to get current flow data
   registerGetFlowData(() => ({
     nodes: nodes.map(fromRFNode),
@@ -79,7 +103,10 @@ export default function WorkflowCanvas({
   }))
 
   const onConnect = useCallback(
-    (connection: Connection) => setEdges((eds) => addEdge(connection, eds)),
+    (connection: Connection) =>
+      setEdges((eds) =>
+        addEdge({ ...connection, animated: true, style: { stroke: '#6366F1' } }, eds)
+      ),
     [setEdges]
   )
 
@@ -103,7 +130,7 @@ export default function WorkflowCanvas({
         id: `node-${++nodeIdCounter}`,
         type,
         position,
-        data: { label: type },
+        data: { label: DEFAULT_LABEL_MAP[type] ?? type },
       }
       setNodes((nds) => nds.concat(newNode))
     },
@@ -138,6 +165,7 @@ export default function WorkflowCanvas({
       <ReactFlow
         nodes={nodes}
         edges={edges}
+        nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
@@ -147,10 +175,22 @@ export default function WorkflowCanvas({
         onPaneClick={onPaneClick}
         onInit={(instance) => { rfInstanceRef.current = instance }}
         fitView
+        deleteKeyCode="Delete"
       >
-        <Background />
+        <Background color="#E2E8F0" gap={20} />
         <Controls />
-        <MiniMap />
+        <MiniMap
+          nodeColor={(n) => {
+            const colorMap: Record<string, string> = {
+              start: '#16A34A', end: '#DC2626', env_check: '#2563EB',
+              ai_decision: '#7C3AED', condition: '#D97706', skill: '#4F46E5',
+              blue_green: '#0891B2', rollback: '#E11D48', notification: '#64748B',
+              shell: '#2563EB', http: '#0D9488', llm: '#7C3AED',
+            }
+            return colorMap[n.type ?? ''] ?? '#94A3B8'
+          }}
+          style={{ borderRadius: 8 }}
+        />
       </ReactFlow>
     </div>
   )

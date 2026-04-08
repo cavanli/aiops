@@ -2,14 +2,22 @@ import { useState } from 'react'
 import { Table, Button, Space, Tag, Popconfirm } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/es/table'
-import type { DeploymentTemplate, TemplateType } from '@/types/deployment'
+import type { DeploymentTemplate, ScriptType } from '@/types/deployment'
 import { useTemplates, useDeleteTemplate } from './useDeployments'
 import TemplateDrawer from './TemplateDrawer'
 
-const typeColor: Record<TemplateType, string> = {
+const typeColor: Record<ScriptType, string> = {
   shell: 'blue',
+  python: 'green',
   helm: 'purple',
   'docker-compose': 'cyan',
+}
+
+const typeLabel: Record<ScriptType, string> = {
+  shell: 'Shell',
+  python: 'Python',
+  helm: 'Helm',
+  'docker-compose': 'Docker Compose',
 }
 
 export default function TemplateList() {
@@ -22,11 +30,11 @@ export default function TemplateList() {
   const columns: ColumnsType<DeploymentTemplate> = [
     { title: '名称', dataIndex: 'name', key: 'name' },
     {
-      title: '��型',
-      dataIndex: 'type',
-      key: 'type',
+      title: '类型',
+      dataIndex: 'script_type',
+      key: 'script_type',
       width: 140,
-      render: (t: TemplateType) => <Tag color={typeColor[t]}>{t}</Tag>,
+      render: (t: ScriptType) => <Tag color={typeColor[t]}>{typeLabel[t]}</Tag>,
     },
     {
       title: '描述',

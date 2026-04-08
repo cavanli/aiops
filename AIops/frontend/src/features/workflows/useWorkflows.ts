@@ -6,7 +6,7 @@ import type { UpdateWorkflowRequest } from '@/types/workflow'
 export function useWorkflows() {
   return useQuery({
     queryKey: ['workflows'],
-    queryFn: () => workflowsApi.list().then((r) => r.data.data),
+    queryFn: () => workflowsApi.list().then((r) => r.data.data.items),
   })
 }
 

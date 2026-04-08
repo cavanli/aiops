@@ -21,13 +21,13 @@ export default function TemplateDrawer({ open, editingTemplate, onClose }: Props
       if (editingTemplate) {
         form.setFieldsValue({
           name: editingTemplate.name,
-          type: editingTemplate.type,
+          script_type: editingTemplate.script_type,
           description: editingTemplate.description,
           script_content: editingTemplate.script_content,
         })
       } else {
         form.resetFields()
-        form.setFieldValue('type', 'shell')
+        form.setFieldValue('script_type', 'shell')
       }
     }
   }, [open, editingTemplate, form])
@@ -63,10 +63,11 @@ export default function TemplateDrawer({ open, editingTemplate, onClose }: Props
         <Form.Item name="name" label="模板名称" rules={[{ required: true, message: '请输入名称' }]}>
           <Input placeholder="e.g. 应用部署脚本" />
         </Form.Item>
-        <Form.Item name="type" label="类型" rules={[{ required: true }]}>
+        <Form.Item name="script_type" label="类型" rules={[{ required: true }]}>
           <Select
             options={[
               { label: 'Shell 脚本', value: 'shell' },
+              { label: 'Python 脚本', value: 'python' },
               { label: 'Helm Chart', value: 'helm' },
               { label: 'Docker Compose', value: 'docker-compose' },
             ]}

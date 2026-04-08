@@ -22,6 +22,9 @@ export default function Login() {
       );
       const { token, refresh_token, user } = res.data.data;
       setAuth(token, refresh_token, user);
+      // Give zustand-persist one tick to flush to localStorage before
+      // React Query fires protected requests on the dashboard mount.
+      await new Promise((r) => setTimeout(r, 0));
       message.success('登录成功');
       navigate('/');
     } catch {
@@ -44,7 +47,7 @@ export default function Login() {
       <Card style={{ width: 400, borderRadius: 8 }}>
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <Title level={3} style={{ color: '#2563EB', margin: 0 }}>
-            AIOps 部署中台
+            项目交付AIOPS
           </Title>
         </div>
         <Form name="login" onFinish={onFinish} size="large">

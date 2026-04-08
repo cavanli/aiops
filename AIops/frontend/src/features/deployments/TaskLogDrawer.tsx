@@ -63,10 +63,10 @@ export default function TaskLogDrawer({ open, taskId, onClose }: Props) {
           {task && (
             <div style={{ marginBottom: 12 }}>
               <Text type="secondary">
-                模板：{task.template_name} &nbsp;|&nbsp;
-                主机：{task.target_hosts.join(', ')}
-                {task.started_at && (
-                  <> &nbsp;|&nbsp; 开始：{new Date(task.started_at).toLocaleString('zh-CN')}</>
+                模板 ID：{task.template_id} &nbsp;|&nbsp;
+                主机 ID：{task.host_ids.join(', ')}
+                {task.start_time && (
+                  <> &nbsp;|&nbsp; 开始：{new Date(task.start_time).toLocaleString('zh-CN')}</>
                 )}
               </Text>
             </div>
